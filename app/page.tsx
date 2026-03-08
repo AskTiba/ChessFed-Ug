@@ -60,35 +60,44 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Clubs & League Spotlight */}
-        <section className="py-24 bg-zinc-50 dark:bg-zinc-900/30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* Clubs & League Spotlight - NATIONAL PRIDE THEME */}
+        <section className="py-24 bg-zinc-950 relative overflow-hidden">
+          {/* Subtle National Color Accents */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-black via-yellow-500 to-red-600 opacity-50"></div>
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
               <div>
-                <h2 className="text-4xl font-black text-zinc-900 dark:text-white italic uppercase tracking-tighter mb-6">Club Supremacy</h2>
-                <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed">
-                  Join one of Uganda's 20+ official chess clubs. Compete in the National League, build your team roster, and battle for the Division 1 title.
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">
+                  National Chess League
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black text-white italic uppercase tracking-tighter mb-6 leading-tight">
+                  Club <span className="text-yellow-500">Supremacy</span>
+                </h2>
+                <p className="text-lg text-zinc-400 mb-10 leading-relaxed italic">
+                  Join one of Uganda's 20+ official chess clubs. From the historic Kireka roots to the rising stars of SOM Katwe, compete for the Division 1 title and national glory.
                 </p>
-                <div className="flex gap-4">
-                  <Link href="/clubs" className="px-6 py-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-2xl hover:scale-105 transition-all">
+                <div className="flex flex-wrap gap-4">
+                  <Link href="/clubs" className="px-8 py-4 bg-white text-black font-black rounded-2xl hover:bg-yellow-500 transition-all uppercase text-sm tracking-widest shadow-xl">
                     Explore Clubs
                   </Link>
-                  <Link href="/league" className="px-6 py-3 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-bold rounded-2xl hover:bg-white dark:hover:bg-zinc-800 transition-all">
-                    League Standings
+                  <Link href="/league" className="px-8 py-4 border border-zinc-800 text-white font-black rounded-2xl hover:bg-zinc-900 transition-all uppercase text-sm tracking-widest">
+                    League Table
                   </Link>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {[
-                  { name: "Kireka CC", rank: "1st", color: "bg-blue-600" },
-                  { name: "City CC", rank: "2nd", color: "bg-zinc-800" },
-                  { name: "SOM Katwe", rank: "3rd", color: "bg-zinc-800" },
-                  { name: "Doves CC", rank: "4th", color: "bg-zinc-800" },
+                  { name: "Kireka CC", rank: "1st", color: "border-yellow-500/50", text: "text-yellow-500", label: "Defending Champions" },
+                  { name: "City CC", rank: "2nd", color: "border-zinc-800", text: "text-white", label: "Division 1" },
+                  { name: "SOM Katwe", rank: "3rd", color: "border-zinc-800", text: "text-white", label: "Division 1" },
+                  { name: "Doves CC", rank: "4th", color: "border-zinc-800", text: "text-white", label: "Division 1" },
                 ].map((club, i) => (
-                  <div key={i} className={`p-6 rounded-3xl ${club.color} text-white shadow-xl`}>
-                    <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Division 1</p>
-                    <p className="font-bold text-lg mb-1">{club.name}</p>
-                    <p className="text-2xl font-black italic">{club.rank}</p>
+                  <div key={i} className={`p-8 rounded-[2.5rem] bg-zinc-900/50 border-2 ${club.color} backdrop-blur-sm group hover:scale-105 transition-all cursor-default`}>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4">{club.label}</p>
+                    <h3 className="font-bold text-xl text-white mb-2 group-hover:text-yellow-500 transition-colors">{club.name}</h3>
+                    <p className={`text-3xl font-black italic ${club.text}`}>{club.rank}</p>
                   </div>
                 ))}
               </div>
