@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role      @default(PLAYER)
+  accounts      Account[]
+  sessions      Session[]
+  
+  playerId      String?   @unique
+  player        Player?   @relation(fields: [playerId], references: [id])
+}
+
+enum Role {
+  PLAYER
+  ADMIN
+  OFFICIAL
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Player {
+  id              String           @id @default(cuid())
+  fideId          String?          @unique
+  name            String
+  rating          Int              @default(1200)
+  federation      String           @default("UGA")
+  tournaments     Tournament[]
+  whiteGames      Game[]           @relation("white_games")
+  blackGames      Game[]           @relation("black_games")
+  scores          Score[]
+  grandPrixPoints GrandPrixPoint[]
+  user            User?
+}
+
+model Tournament {
+  id                   String           @id @default(cuid())
+  name                 String
+  description          String?          @db.Text
+  history              String?          @db.Text
+  startDate            DateTime
+  endDate              DateTime
+  registrationDeadline DateTime?
+  registrationFee      Float?
+  prizeFund            Float?
+  venue                String?
+  format               String           @default("Swiss") // Swiss, Round-Robin
+  totalRounds          Int
+  isGrandPrix          Boolean          @default(false)
+  sponsors             Sponsor[]
+  officials            Official[]
+  players              Player[]
+  games                Game[]
+  scores               Score[]
+  pairings             Pairing[]
+  grandPrixPoints      GrandPrixPoint[]
+}
+
+model GrandPrixPoint {
+  id           String     @id @default(cuid())
+  points       Float
+  playerId     String
+  tournamentId String
+  player       Player     @relation(fields: [playerId], references: [id])
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+
+  @@unique([playerId, tournamentId])
+}
+
+model Sponsor {
+  id           String       @id @default(cuid())
+  name         String
+  logoUrl      String?
+  tournaments  Tournament[]
+}
+
+model Official {
+  id           String       @id @default(cuid())
+  name         String
+  role         String       // Arbiter, Organizer, etc.
+  tournaments  Tournament[]
+}
+
+model Game {
+  id           String     @id @default(cuid())
+  tournamentId String
+  round        Int
+  whiteId      String
+  blackId      String
+  result       String?    // "1-0", "0-1", "1/2-1/2"
+  pgn          String?
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  white        Player     @relation("white_games", fields: [whiteId], references: [id])
+  black        Player     @relation("black_games", fields: [blackId], references: [id])
+}
+
+model Score {
+  id           String     @id @default(cuid())
+  tournamentId String
+  playerId     String
+  score        Float
+  buchholz     Float?
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  player       Player     @relation(fields: [playerId], references: [id])
+}
+
+model Pairing {
+  id           String     @id @default(cuid())
+  round        Int
+  table        Int
+  whiteId      String
+  blackId      String
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+}
