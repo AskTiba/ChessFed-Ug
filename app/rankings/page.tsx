@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import YearSelector from "@/components/YearSelector";
 
 export default async function NationalRankingsPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: { q?: string; year?: string };
 }) {
   const query = searchParams.q || "";
+  const year = searchParams.year || "2026";
 
   const players = await prisma.player.findMany({
     where: {
@@ -39,8 +41,11 @@ export default async function NationalRankingsPage({
       <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div className="max-w-2xl">
+            <div className="mb-6">
+              <YearSelector currentYear={year} />
+            </div>
             <h1 className="text-4xl font-extrabold text-zinc-900 dark:text-white mb-4 italic uppercase tracking-tighter">
-              Uganda Top 100
+              Uganda Top 100 ({year})
             </h1>
             <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
               The official national rankings for the Uganda Chess Federation. Search by name or FIDE ID to view the performance of our top-rated masters and rising stars.

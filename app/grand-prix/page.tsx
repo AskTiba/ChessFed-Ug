@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import YearSelector from "@/components/YearSelector";
 
-export default async function GrandPrixLeaderboardPage() {
+export default async function GrandPrixLeaderboardPage({
+  searchParams,
+}: {
+  searchParams: { year?: string };
+}) {
+  const year = searchParams.year || "2026";
   const players = await prisma.player.findMany({
     include: {
       grandPrixPoints: {
@@ -20,7 +26,7 @@ export default async function GrandPrixLeaderboardPage() {
       name: player.name,
       fideId: player.fideId,
       rating: player.rating,
-      totalPoints: player.grandPrixPoints.reduce((sum, gp) => sum + gp.points, 0),
+      totalPoints: player.grandPrixPoints.reduce((sum: number, gp) => sum + gp.points, 0),
       events: player.grandPrixPoints.map(gp => gp.tournament.name),
       eventCount: player.grandPrixPoints.length,
     }))
@@ -49,8 +55,11 @@ export default async function GrandPrixLeaderboardPage() {
         <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-500/20 skew-x-12 translate-x-1/4"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
+            <div className="mb-8">
+              <YearSelector currentYear={year} />
+            </div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-blue-100 text-xs font-bold uppercase tracking-widest mb-6">
-              Official Season Standings
+              Official Season Standings ({year})
             </div>
             <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight uppercase tracking-tighter italic">
               The Grand Prix <br /> Race to the Top

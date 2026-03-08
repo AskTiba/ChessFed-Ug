@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -85,7 +84,7 @@ model Tournament {
   description          String?          @db.Text
   history              String?          @db.Text
   startDate            DateTime
-  endDate              DateTime
+  endDate            DateTime
   registrationDeadline DateTime?
   registrationFee      Float?
   prizeFund            Float?

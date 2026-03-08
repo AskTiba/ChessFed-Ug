@@ -12,11 +12,13 @@ export default function Home() {
                 ♟️ ChessFed<span className="text-blue-600">UG</span>
               </span>
             </div>
-            <div className="hidden md:flex items-center gap-8">
-              <Link href="#calendar" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Calendar</Link>
-              <Link href="#grand-prix" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Grand Prix</Link>
-              <Link href="#rankings" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Rankings</Link>
-              <Link href="/login" className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20">Portal Login</Link>
+            <div className="hidden md:flex items-center gap-6 lg:gap-8">
+              <Link href="/tournaments" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Calendar</Link>
+              <Link href="/grand-prix" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Grand Prix</Link>
+              <Link href="/rankings" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Rankings</Link>
+              <Link href="/clubs" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Clubs</Link>
+              <Link href="/league" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">League</Link>
+              <Link href="/dashboard" className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20">Member Portal</Link>
             </div>
           </div>
         </div>
@@ -38,7 +40,7 @@ export default function Home() {
               </span>
               2026 Grand Prix Season is Live
             </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6">
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6 leading-[1.1]">
               The Road to the <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
                 National Team
@@ -51,9 +53,45 @@ export default function Home() {
               <Link href="/tournaments" className="w-full sm:w-auto px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-full hover:bg-blue-700 hover:scale-105 transition-all shadow-xl shadow-blue-500/30">
                 View Tournament Calendar
               </Link>
-              <Link href="#grand-prix" className="w-full sm:w-auto px-8 py-4 text-lg font-bold text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-800 rounded-full hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all">
+              <Link href="/grand-prix" className="w-full sm:w-auto px-8 py-4 text-lg font-bold text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-800 rounded-full hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all">
                 The Grand Prix Race
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Clubs & League Spotlight */}
+        <section className="py-24 bg-zinc-50 dark:bg-zinc-900/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <h2 className="text-4xl font-black text-zinc-900 dark:text-white italic uppercase tracking-tighter mb-6">Club Supremacy</h2>
+                <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed">
+                  Join one of Uganda's 20+ official chess clubs. Compete in the National League, build your team roster, and battle for the Division 1 title.
+                </p>
+                <div className="flex gap-4">
+                  <Link href="/clubs" className="px-6 py-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-2xl hover:scale-105 transition-all">
+                    Explore Clubs
+                  </Link>
+                  <Link href="/league" className="px-6 py-3 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-bold rounded-2xl hover:bg-white dark:hover:bg-zinc-800 transition-all">
+                    League Standings
+                  </Link>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { name: "Kireka CC", rank: "1st", color: "bg-blue-600" },
+                  { name: "City CC", rank: "2nd", color: "bg-zinc-800" },
+                  { name: "SOM Katwe", rank: "3rd", color: "bg-zinc-800" },
+                  { name: "Doves CC", rank: "4th", color: "bg-zinc-800" },
+                ].map((club, i) => (
+                  <div key={i} className={`p-6 rounded-3xl ${club.color} text-white shadow-xl`}>
+                    <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Division 1</p>
+                    <p className="font-bold text-lg mb-1">{club.name}</p>
+                    <p className="text-2xl font-black italic">{club.rank}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -89,7 +127,7 @@ export default function Home() {
                     <p className="flex justify-between"><span>Status:</span> <span className="font-semibold text-zinc-900 dark:text-white">{event.status}</span></p>
                     <p className="flex justify-between"><span>Prize Fund:</span> <span className="font-semibold text-green-600">{event.prize}</span></p>
                   </div>
-                  <Link href="#" className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 group-hover:gap-3 transition-all">
+                  <Link href="/tournaments" className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 group-hover:gap-3 transition-all">
                     Full Event Portal <span>→</span>
                   </Link>
                 </div>
@@ -98,40 +136,40 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Grand Prix Explained */}
-        <section id="grand-prix" className="py-24 bg-blue-600 dark:bg-blue-700 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-500/20 skew-x-12 translate-x-1/4"></div>
+        {/* Grand Prix Explained - REFINED COLORS */}
+        <section id="grand-prix" className="py-24 bg-zinc-900 dark:bg-zinc-950 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-600/5 skew-x-12 translate-x-1/4"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div>
-                <h2 className="text-4xl font-bold text-white mb-6">The Grand Prix System</h2>
-                <div className="space-y-6 text-blue-50">
-                  <p className="text-lg">
+                <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter mb-6">The Grand Prix <span className="text-blue-500">System</span></h2>
+                <div className="space-y-6 text-zinc-400">
+                  <p className="text-lg italic">
                     The Grand Prix is the definitive season-long competition that identifies Uganda's most consistent chess talent. 
                   </p>
                   <ul className="space-y-4">
                     <li className="flex gap-3">
-                      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">1</div>
+                      <div className="w-6 h-6 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-[10px] font-black text-blue-400">1</div>
                       <span>Participate in designated Grand Prix events throughout the calendar year.</span>
                     </li>
                     <li className="flex gap-3">
-                      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">2</div>
+                      <div className="w-6 h-6 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-[10px] font-black text-blue-400">2</div>
                       <span>Earn cumulative points based on your final tournament rankings.</span>
                     </li>
                     <li className="flex gap-3">
-                      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">3</div>
+                      <div className="w-6 h-6 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-[10px] font-black text-blue-400">3</div>
                       <span>The top scorers qualify for the National Team and international representations.</span>
                     </li>
                   </ul>
-                  <Link href="/grand-prix" className="inline-block mt-8 px-8 py-4 bg-white text-blue-600 font-bold rounded-full hover:scale-105 transition-transform shadow-xl">
+                  <Link href="/grand-prix" className="inline-block mt-8 px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 hover:scale-105 transition-all shadow-xl shadow-blue-500/20">
                     View Live GP Standings
                   </Link>
                 </div>
               </div>
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8">
-                <h3 className="text-white font-bold mb-6 flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                  Mock Standings: Top GP Leaders
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-[3rem] p-10">
+                <h3 className="text-white font-black italic uppercase tracking-tighter mb-8 flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                  Top GP Leaders
                 </h3>
                 <div className="space-y-4">
                   {[
@@ -140,12 +178,12 @@ export default function Home() {
                     { name: "FM Patrick Kawuma", points: 35.5, rank: 3 },
                     { name: "WFM Shakira Ampaire", points: 31.0, rank: 4 },
                   ].map((p, i) => (
-                    <div key={i} className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div key={i} className="flex justify-between items-center p-5 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
                       <div className="flex items-center gap-4">
-                        <span className="text-blue-200 font-bold w-4 text-center">{p.rank}</span>
-                        <span className="text-white font-medium">{p.name}</span>
+                        <span className="text-blue-400 font-black italic w-4 text-center">{p.rank}</span>
+                        <span className="text-zinc-100 font-bold">{p.name}</span>
                       </div>
-                      <span className="text-blue-200 font-bold">{p.points} pts</span>
+                      <span className="text-blue-400 font-black italic">{p.points} pts</span>
                     </div>
                   ))}
                 </div>
@@ -170,21 +208,44 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-zinc-200 dark:border-zinc-800">
+      <footer className="py-16 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold tracking-tighter text-zinc-900 dark:text-white">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div className="md:col-span-2">
+              <span className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white">
                 ♟️ ChessFed<span className="text-blue-600">UG</span>
               </span>
+              <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400 max-w-sm leading-relaxed italic">
+                The official digital hub for the Uganda Chess Federation. Dedicated to excellence, transparency, and the growth of chess talent across the nation.
+              </p>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 text-center md:text-left">
-              Official Hub for the Uganda Chess Federation Community. <br />
-              <span className="text-xs">Built by Anthony Ngisiro | Supporting Ugandan Chess Excellence.</span>
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-zinc-900 dark:text-white mb-6">Federation</h4>
+              <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+                <li><Link href="/tournaments" className="hover:text-blue-600 transition-colors">Calendar</Link></li>
+                <li><Link href="/grand-prix" className="hover:text-blue-600 transition-colors">Grand Prix</Link></li>
+                <li><Link href="/rankings" className="hover:text-blue-600 transition-colors">National Rankings</Link></li>
+                <li><Link href="/league" className="hover:text-blue-600 transition-colors">League Standings</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-zinc-900 dark:text-white mb-6">Operations</h4>
+              <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+                <li><Link href="/clubs" className="hover:text-blue-600 transition-colors">Clubs Directory</Link></li>
+                <li><Link href="/admin" className="hover:text-blue-600 transition-colors">Admin Oversight</Link></li>
+                <li><Link href="/dashboard" className="hover:text-blue-600 transition-colors">Member Portal</Link></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center md:text-left font-medium">
+              © 2026 Chess Federation Uganda. Built by Anthony Ngisiro.
             </p>
-            <div className="flex gap-6">
-              <Link href="#" className="text-zinc-400 hover:text-blue-600 transition-colors">Twitter</Link>
-              <Link href="#" className="text-zinc-400 hover:text-blue-600 transition-colors">GitHub</Link>
+            <div className="flex gap-8">
+              <Link href="#" className="text-xs font-bold text-zinc-400 hover:text-blue-600 transition-colors uppercase tracking-widest">Twitter</Link>
+              <Link href="#" className="text-xs font-bold text-zinc-400 hover:text-blue-600 transition-colors uppercase tracking-widest">GitHub</Link>
+              <Link href="/admin" className="text-xs font-bold text-zinc-400 hover:text-blue-600 transition-colors uppercase tracking-widest">Federation Login</Link>
             </div>
           </div>
         </div>

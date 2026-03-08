@@ -139,8 +139,42 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                       <p className="text-lg font-bold">UGX {((tournament.prizeFund || 0) * 0.15).toLocaleString()}</p>
                     </div>
                   </div>
-                  <p className="mt-6 text-xs text-zinc-500">Other prizes include Best Lady, Best Junior, and Rating Category awards.</p>
                 </div>
+              </div>
+            </section>
+
+            {/* Podium History */}
+            <section>
+              <h2 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter mb-6 flex items-center gap-3">
+                <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
+                Podium History
+              </h2>
+              <div className="space-y-6">
+                {(tournament as any).podiums?.map((p: any) => (
+                  <div key={p.year} className="p-8 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[2.5rem] shadow-xl shadow-zinc-200/50 dark:shadow-none">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-black italic text-zinc-900 dark:text-white uppercase tracking-tighter">{p.year} Results</h3>
+                      <Link href="#" className="text-[10px] font-black uppercase text-blue-600 hover:underline">Full Standings →</Link>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {p.podium.map((rank: any) => (
+                        <div key={rank.rank} className="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                          <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs ${
+                            rank.rank === 1 ? 'bg-amber-100 text-amber-600' :
+                            rank.rank === 2 ? 'bg-zinc-100 text-zinc-500' :
+                            'bg-orange-100 text-orange-600'
+                          }`}>
+                            {rank.rank}
+                          </span>
+                          <div>
+                            <p className="font-bold text-sm text-zinc-900 dark:text-white">{rank.name}</p>
+                            <p className="text-[10px] text-zinc-500 font-medium">Rating: {rank.rating}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
           </div>
@@ -187,7 +221,14 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                 <span className="text-5xl font-black">{tournament._count.players}</span>
                 <span className="text-blue-200 font-bold">Players Registered</span>
               </div>
-              <div className="mt-6 pt-6 border-t border-blue-500/50">
+              <div className="mt-6 pt-6 border-t border-blue-500/50 space-y-4">
+                <Link href={`/tournaments/${tournament.id}/live`} className="flex items-center justify-center gap-2 w-full py-3 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-sm transition-all shadow-lg">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                  </span>
+                  ENTER LIVE CENTER
+                </Link>
                 <Link href="#" className="text-sm font-bold text-white hover:underline flex items-center justify-between">
                   View Full Starting List <span>→</span>
                 </Link>

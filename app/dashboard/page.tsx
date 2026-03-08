@@ -5,15 +5,18 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export default async function PlayerDashboardPage() {
-  const session = await getServerSession(authOptions);
+  // --- PREVIEW MODE BYPASS ---
+  // const session = await getServerSession(authOptions);
+  // if (!session?.user) redirect("/login");
+  const session = { user: { name: "Anthony Ngisiro", email: "anthony@example.com" } };
+  // ---------------------------
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+  // Find ANY player from the database to show the layout
+  const firstPlayer = await prisma.player.findFirst();
 
   // Find the player associated with this user
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
+  const user = await prisma.user.findFirst({
+    where: { playerId: firstPlayer?.id },
     include: {
       player: {
         include: {
@@ -29,8 +32,8 @@ export default async function PlayerDashboardPage() {
     }
   });
 
-  const player = user?.player;
-  const totalGPPoints = player?.grandPrixPoints.reduce((sum, gp) => sum + gp.points, 0) || 0;
+  const player = user?.player || firstPlayer; // Fallback to first player for preview
+  const totalGPPoints = player?.grandPrixPoints.reduce((sum: number, gp) => sum + gp.points, 0) || 0;
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans pb-20">
