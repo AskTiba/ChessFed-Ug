@@ -27,7 +27,7 @@ export default async function TournamentRegistrationPage({ params }: { params: {
   });
 
   const player = user?.player;
-  const isAlreadyRegistered = player ? tournament.players.some(p => p.id === player.id) : false;
+  const isAlreadyRegistered = player ? tournament.players.some((p: any) => p.id === player.id) : false;
   
   const isDeadlinePassed = tournament.registrationDeadline 
     ? new Date(tournament.registrationDeadline) < new Date() 

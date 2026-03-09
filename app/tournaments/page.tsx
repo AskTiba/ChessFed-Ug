@@ -47,7 +47,7 @@ export default async function TournamentsPage() {
 
         {/* Tournament Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {tournaments.map((tournament) => (
+          {tournaments.map((tournament: any) => (
             <div key={tournament.id} className="group flex flex-col bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 hover:shadow-2xl hover:shadow-blue-500/5 transition-all overflow-hidden p-8">
               <div className="flex justify-between items-start mb-6">
                 <div className="flex flex-col gap-1">
@@ -88,7 +88,7 @@ export default async function TournamentsPage() {
 
               <div className="mt-auto pt-6 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
                 <div className="flex -space-x-2">
-                  {tournament.sponsors.map((s, idx) => (
+                  {tournament.sponsors.map((s: any, idx: number) => (
                     <div key={idx} className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 border-2 border-white dark:border-zinc-900 flex items-center justify-center text-[10px] font-bold text-zinc-400 uppercase" title={s.name}>
                       {s.name.substring(0, 1)}
                     </div>

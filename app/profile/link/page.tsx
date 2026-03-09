@@ -70,7 +70,7 @@ export default async function LinkProfilePage({
 
           <div className="space-y-4">
             {players.length > 0 ? (
-              players.map((player) => (
+              players.map((player: any) => (
                 <div key={player.id} className="flex items-center justify-between p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 hover:border-blue-500/50 transition-all group">
                   <div>
                     <p className="font-bold text-zinc-900 dark:text-white">{player.name}</p>

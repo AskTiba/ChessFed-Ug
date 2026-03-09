@@ -33,7 +33,7 @@ export default async function PlayerDashboardPage() {
   });
 
   const player = user?.player || firstPlayer; // Fallback to first player for preview
-  const totalGPPoints = player?.grandPrixPoints.reduce((sum: number, gp) => sum + gp.points, 0) || 0;
+  const totalGPPoints = player?.grandPrixPoints.reduce((sum: number, gp: any) => sum + gp.points, 0) || 0;
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans pb-20">
@@ -124,7 +124,7 @@ export default async function PlayerDashboardPage() {
                     <p className="text-sm text-zinc-500 italic">No Grand Prix points recorded in the 2026 season yet.</p>
                   ) : (
                     <div className="space-y-6">
-                      {player.grandPrixPoints.map((gp) => (
+                      {player.grandPrixPoints.map((gp: any) => (
                         <div key={gp.id} className="flex justify-between items-center group">
                           <div className="max-w-[70%]">
                             <p className="font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 transition-colors truncate">{gp.tournament.name}</p>
@@ -153,7 +153,7 @@ export default async function PlayerDashboardPage() {
                     <p className="text-sm text-zinc-500 italic">You haven't participated in any tournaments yet.</p>
                   ) : (
                     <div className="space-y-6">
-                      {player.tournaments.map((t) => (
+                      {player.tournaments.map((t: any) => (
                         <Link href={`/tournaments/${t.id}`} key={t.id} className="flex justify-between items-center group">
                           <div>
                             <p className="font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 transition-colors">{t.name}</p>
