@@ -12,6 +12,19 @@ ChessFed Uganda is the official high-fidelity digital hub designed for the Ugand
 
 ---
 
+## 📸 Preview
+> **Note:** Replace these placeholders with actual screenshots from your deployment to showcase the "Proudly Ugandan" UI.
+
+| Landing Page | National Rankings |
+| :--- | :--- |
+| ![Hero Section Placeholder](https://placehold.co/600x400/09090b/white?text=ChessFed+UG+Hero+Section) | ![Rankings Placeholder](https://placehold.co/600x400/09090b/white?text=National+ELO+Rankings) |
+
+| Grand Prix Standings | Member Dashboard |
+| :--- | :--- |
+| ![GP Placeholder](https://placehold.co/600x400/09090b/white?text=Grand+Prix+Leaderboard) | ![Dashboard Placeholder](https://placehold.co/600x400/09090b/white?text=Player+Performance+Dashboard) |
+
+---
+
 ## 🇺🇬 Proudly Ugandan & Elegant by Design
 The platform features a modern, eye-soothing dark aesthetic (`Zinc-950`) that harmonizes the **Official Federation Blue** with the vibrant **National Flag Colors** (Black, Yellow, Red). Every view is optimized for spatial efficiency and visual prestige.
 
@@ -112,13 +125,11 @@ We ❤️ Open Source! This project is an open-source initiative dedicated to im
 4.  **Push to the branch** (`git push origin feature/AmazingFeature`).
 5.  **Open a Pull Request**.
 
-Whether it's fixing a bug, improving the UI, or suggesting new features, your help is appreciated!
-
 ---
 
-## 📜 License
+## 📜 License & Credit
 This project is currently the official digital development effort for the **Uganda Chess Federation Community**. 
 
-Built with passion by **Anthony Ngisiro**.
+Built with passion by **Anthony Tibamwenda**.
 
 © 2026 Uganda Chess Federation. All Rights Reserved.
