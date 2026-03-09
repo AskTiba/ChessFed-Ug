@@ -13,15 +13,14 @@ ChessFed Uganda is the official high-fidelity digital hub designed for the Ugand
 ---
 
 ## 📸 Preview
-> **Note:** Replace these placeholders with actual screenshots from your deployment to showcase the "Proudly Ugandan" UI.
 
 | Landing Page | National Rankings |
 | :--- | :--- |
-| ![Hero Section Placeholder](https://placehold.co/600x400/09090b/white?text=ChessFed+UG+Hero+Section) | ![Rankings Placeholder](https://placehold.co/600x400/09090b/white?text=National+ELO+Rankings) |
+| ![Landing Page](public/landing-page.png) | ![National Rankings](public/national-rankings.png) |
 
 | Grand Prix Standings | Member Dashboard |
 | :--- | :--- |
-| ![GP Placeholder](https://placehold.co/600x400/09090b/white?text=Grand+Prix+Leaderboard) | ![Dashboard Placeholder](https://placehold.co/600x400/09090b/white?text=Player+Performance+Dashboard) |
+| ![Grand Prix Standings](public/grand-prix-standings.png) | ![Member Dashboard](public/member-dashboard.png) |
 
 ---
 
