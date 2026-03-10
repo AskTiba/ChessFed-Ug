@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
-export default async function TournamentDetailPage({ params }: { params: { id: string } }) {
+export default async function TournamentDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const tournament = await prisma.tournament.findUnique({
     where: { id: params.id },
     include: {

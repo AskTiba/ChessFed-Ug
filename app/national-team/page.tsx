@@ -77,11 +77,10 @@ async function NationalTeamContent({ searchParams }: { searchParams: { year?: st
   );
 }
 
-export default async function NationalTeamPage({
-  searchParams,
-}: {
-  searchParams: { year?: string };
+export default async function NationalTeamPage(props: {
+  searchParams: Promise<{ year?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const year = searchParams.year || "2026";
 
   return (

@@ -137,11 +137,10 @@ async function LeaderboardContent({ searchParams }: { searchParams: { year?: str
   );
 }
 
-export default async function GrandPrixLeaderboardPage({
-  searchParams,
-}: {
-  searchParams: { year?: string };
+export default async function GrandPrixLeaderboardPage(props: {
+  searchParams: Promise<{ year?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const year = searchParams.year || "2026";
 
   return (

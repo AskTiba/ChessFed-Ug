@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import JoinClubButton from "./JoinClubButton";
 
-export default async function ClubDetailPage({ params }: { params: { id: string } }) {
+export default async function ClubDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const club = await prisma.club.findUnique({
     where: { id: params.id },
   });

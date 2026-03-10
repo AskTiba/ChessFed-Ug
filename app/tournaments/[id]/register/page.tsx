@@ -5,7 +5,8 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import RegisterButton from "./RegisterButton";
 
-export default async function TournamentRegistrationPage({ params }: { params: { id: string } }) {
+export default async function TournamentRegistrationPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 

@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ClubManagementClient from "./ClubManagementClient";
 
-export default async function ClubManagementPage({ params }: { params: { id: string } }) {
+export default async function ClubManagementPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const club = await prisma.club.findUnique({
     where: { id: params.id },
   });

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { MOCK_PAIRINGS, MOCK_STANDINGS } from "@/lib/mock-store";
 
-export default async function TournamentLivePage({ params }: { params: { id: string } }) {
+export default async function TournamentLivePage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const tournament = await prisma.tournament.findUnique({
     where: { id: params.id },
   });

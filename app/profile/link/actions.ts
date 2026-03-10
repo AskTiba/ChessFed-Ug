@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function linkPlayerAction(playerId: string) {
+export async function linkPlayerAction(playerId: string, fideData?: any) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
@@ -23,9 +23,34 @@ export async function linkPlayerAction(playerId: string) {
       return { success: false, error: "Your account is already linked to a player." };
     }
 
-    // 2. Check if player is already linked to someone else
+    let targetPlayerId = playerId;
+
+    // 2. If it's a FIDE import (not yet in our DB)
+    if (fideData) {
+      // Check if player already exists in our DB by fideId
+      const existingPlayer = await prisma.player.findUnique({
+        where: { fideId: fideData.fideId.toString() }
+      });
+
+      if (existingPlayer) {
+        targetPlayerId = existingPlayer.id;
+      } else {
+        // Create the player record
+        const newPlayer = await prisma.player.create({
+          data: {
+            name: fideData.name,
+            fideId: fideData.fideId.toString(),
+            rating: fideData.rating || 1200,
+            federation: "UGA"
+          }
+        });
+        targetPlayerId = newPlayer.id;
+      }
+    }
+
+    // 3. Check if player is already linked to someone else
     const player = await prisma.player.findUnique({
-      where: { id: playerId },
+      where: { id: targetPlayerId },
       include: { user: true }
     });
 
@@ -37,10 +62,10 @@ export async function linkPlayerAction(playerId: string) {
       return { success: false, error: "This player profile is already linked to another account." };
     }
 
-    // 3. Link them
+    // 4. Link them
     await prisma.user.update({
       where: { id: user!.id },
-      data: { playerId }
+      data: { playerId: targetPlayerId }
     });
 
     revalidatePath("/dashboard");

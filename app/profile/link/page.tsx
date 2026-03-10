@@ -3,13 +3,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import LinkPlayerButton from "./LinkPlayerButton";
+import SearchResults from "./SearchResults";
 
-export default async function LinkProfilePage({
-  searchParams,
-}: {
-  searchParams: { q?: string };
+export default async function LinkProfilePage(props: {
+  searchParams: Promise<{ q?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 
@@ -22,7 +21,7 @@ export default async function LinkProfilePage({
   if (user?.playerId) redirect("/dashboard");
 
   const query = searchParams.q || "";
-  const players = query 
+  const localPlayers = query 
     ? await prisma.player.findMany({
         where: {
           AND: [
@@ -68,29 +67,14 @@ export default async function LinkProfilePage({
             <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           </form>
 
-          <div className="space-y-4">
-            {players.length > 0 ? (
-              players.map((player: any) => (
-                <div key={player.id} className="flex items-center justify-between p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 hover:border-blue-500/50 transition-all group">
-                  <div>
-                    <p className="font-bold text-zinc-900 dark:text-white">{player.name}</p>
-                    <p className="text-xs text-zinc-500">FIDE: {player.fideId || "N/A"} | ELO: {player.rating}</p>
-                  </div>
-                  <LinkPlayerButton playerId={player.id} />
-                </div>
-              ))
-            ) : query ? (
-              <div className="text-center py-10">
-                <p className="text-zinc-500 italic">No unlinked players found matching "{query}"</p>
-                <p className="text-xs text-zinc-400 mt-2">If you aren't in the system, contact the federation to create your master record.</p>
-              </div>
-            ) : (
-              <div className="text-center py-10 opacity-50">
-                <svg className="w-12 h-12 mx-auto mb-4 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                <p className="text-sm text-zinc-500">Search for your name above to begin linking.</p>
-              </div>
-            )}
-          </div>
+          <SearchResults initialQuery={query} localPlayers={localPlayers} />
+          
+          {!query && (
+            <div className="text-center py-10 opacity-50">
+              <svg className="w-12 h-12 mx-auto mb-4 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              <p className="text-sm text-zinc-500">Search for your name above to begin linking.</p>
+            </div>
+          )}
         </div>
       </main>
     </div>
