@@ -1,7 +1,10 @@
 # ♟️ Project State: ChessFed Uganda
 
-**Current Context (as of March 8, 2026):**
-We have completed the **Public Awareness Hub** (Landing Page, Calendar, Detail Pages, Grand Prix Leaderboard, and National Rankings). The database is fully seeded with 2026 events and Grand Prix data. Authentication is configured with NextAuth and Prisma, and route protection is active via Middleware.
+**Current Context (as of March 10, 2026):**
+We have completed the **Public Awareness Hub** and added high-performance **Global Search** and **Player Profiles**.
+- **Global Search:** Implemented on the National Rankings page using a Dual-State pattern for instant feedback and robust ID lookups.
+- **Player Profiles:** Added deep-dive profile pages (`/players/[id]`) with a dual-source fallback (Lichess API + FIDE Mirror) to ensure data resilience.
+- **Documentation:** Added `SEARCH_IMPLEMENTATION_DEEP_DIVE.md` and `FIDE_INTEGRATION_GUIDE.md`.
 
 **Next Immediate Tasks:**
 1.  **Player Dashboard (`/dashboard`):** A private view for signed-in members to track their personal ELO and Grand Prix history.
@@ -13,6 +16,7 @@ We have completed the **Public Awareness Hub** (Landing Page, Calendar, Detail P
 -   **Database:** Prisma (PostgreSQL).
 -   **Authentication:** NextAuth (JWT Strategy).
 -   **Styling:** Tailwind CSS v4.
+-   **Search Pattern:** Always use the Dual-State pattern (Transient vs. Locked state) for search inputs to prevent unnecessary API re-renders.
 
 ---
 *If returning to this project, start by implementing the `/dashboard` route as per the roadmap in `docs/readme.md`.*
