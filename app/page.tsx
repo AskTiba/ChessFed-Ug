@@ -3,27 +3,6 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen font-sans bg-white dark:bg-zinc-950 overflow-x-hidden">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white">
-                ♟️ ChessFed<span className="text-blue-600">UG</span>
-              </span>
-            </div>
-            <div className="hidden md:flex items-center gap-6 lg:gap-8">
-              <Link href="/tournaments" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Calendar</Link>
-              <Link href="/grand-prix" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Grand Prix</Link>
-              <Link href="/rankings" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Rankings</Link>
-              <Link href="/clubs" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">Clubs</Link>
-              <Link href="/league" className="text-sm font-medium text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors">League</Link>
-              <Link href="/dashboard" className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20">Member Portal</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <main className="flex-grow">
         {/* Hero Section: The Road to National Team */}
         <section className="relative min-h-[90vh] flex items-center justify-center pt-20 overflow-hidden bg-gradient-to-b from-blue-50/50 to-white dark:from-zinc-900/50 dark:to-zinc-950">
@@ -215,50 +194,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="py-16 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-            <div className="md:col-span-2">
-              <span className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white">
-                ♟️ ChessFed<span className="text-blue-600">UG</span>
-              </span>
-              <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400 max-w-sm leading-relaxed italic">
-                The official digital hub for the Uganda Chess Federation. Dedicated to excellence, transparency, and the growth of chess talent across the nation.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-black text-xs uppercase tracking-widest text-zinc-900 dark:text-white mb-6">Federation</h4>
-              <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-                <li><Link href="/tournaments" className="hover:text-blue-600 transition-colors">Calendar</Link></li>
-                <li><Link href="/grand-prix" className="hover:text-blue-600 transition-colors">Grand Prix</Link></li>
-                <li><Link href="/rankings" className="hover:text-blue-600 transition-colors">National Rankings</Link></li>
-                <li><Link href="/league" className="hover:text-blue-600 transition-colors">League Standings</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-black text-xs uppercase tracking-widest text-zinc-900 dark:text-white mb-6">Operations</h4>
-              <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-                <li><Link href="/clubs" className="hover:text-blue-600 transition-colors">Clubs Directory</Link></li>
-                <li><Link href="/admin" className="hover:text-blue-600 transition-colors">Admin Oversight</Link></li>
-                <li><Link href="/dashboard" className="hover:text-blue-600 transition-colors">Member Portal</Link></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center md:text-left font-medium">
-              © 2026 Chess Federation Uganda. Built by Anthony Ngisiro.
-            </p>
-            <div className="flex gap-8">
-              <Link href="#" className="text-xs font-bold text-zinc-400 hover:text-blue-600 transition-colors uppercase tracking-widest">Twitter</Link>
-              <Link href="#" className="text-xs font-bold text-zinc-400 hover:text-blue-600 transition-colors uppercase tracking-widest">GitHub</Link>
-              <Link href="/admin" className="text-xs font-bold text-zinc-400 hover:text-blue-600 transition-colors uppercase tracking-widest">Federation Login</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

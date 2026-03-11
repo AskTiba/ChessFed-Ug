@@ -14,21 +14,6 @@ export default async function TournamentsPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Link href="/" className="text-xl font-bold tracking-tighter text-zinc-900 dark:text-white">
-              ♟️ ChessFed<span className="text-blue-600">UG</span>
-            </Link>
-            <div className="flex gap-4">
-              <Link href="/login" className="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400 hover:text-blue-600 transition-colors">Sign In</Link>
-              <Link href="/register" className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-colors">Join Federation</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <main className="pt-24 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="mb-12">
           <h1 className="text-4xl font-extrabold text-zinc-900 dark:text-white mb-4">Official 2026 Calendar</h1>
@@ -105,15 +90,6 @@ export default async function TournamentsPage() {
           ))}
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="py-12 border-t border-zinc-200 dark:border-zinc-800 mt-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            © 2026 Chess Federation Uganda. All rights reserved.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
