@@ -9,12 +9,6 @@ export default async function LeagueStandingsPage() {
     include: { club: true }
   });
 
-  // Diagnostic Log
-  if (standings.length > 0) {
-    console.log("DEBUG - RECORD KEYS:", Object.keys(standings[0]));
-    console.log("DEBUG - FIRST RECORD DATA:", JSON.stringify(standings[0], null, 2));
-  }
-
   return (
     <div className="min-h-screen bg-zinc-950 font-sans pb-20 text-white">
       {/* Navigation */}
@@ -86,15 +80,21 @@ export default async function LeagueStandingsPage() {
                             {s.club?.name || 'Unknown Club'}
                           </Link>
                         </td>
-                        <td className="px-3 py-6 text-center font-bold text-zinc-100">{s.played ?? '??'}</td>
-                        <td className="px-3 py-6 text-center font-bold text-emerald-400">{s.won ?? '??'}</td>
-                        <td className="px-3 py-6 text-center font-bold text-zinc-300">{s.drawn ?? '??'}</td>
-                        <td className="px-3 py-6 text-center font-bold text-rose-400">{s.lost ?? '??'}</td>
-                        <td className="px-6 py-6 text-center font-black text-zinc-100">{s.matchPoints ?? '??'}</td>
-                        <td className="px-6 py-6 text-center font-black text-blue-400 italic">{s.gamePoints?.toFixed(1) ?? '??'}</td>
-                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">{(s.tiebreak1 ?? 0).toFixed(1)}</td>
-                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">{(s.tiebreak2 ?? 0).toFixed(1)}</td>
-                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">{(s.tiebreak3 ?? 0).toFixed(1)}</td>
+                        <td className="px-3 py-6 text-center font-bold text-zinc-100">{s.played}</td>
+                        <td className="px-3 py-6 text-center font-bold text-emerald-400">{s.won}</td>
+                        <td className="px-3 py-6 text-center font-bold text-zinc-300">{s.drawn}</td>
+                        <td className="px-3 py-6 text-center font-bold text-rose-400">{s.lost}</td>
+                        <td className="px-6 py-6 text-center font-black text-zinc-100">{s.matchPoints}</td>
+                        <td className="px-6 py-6 text-center font-black text-blue-400 italic">{s.gamePoints.toFixed(1)}</td>
+                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">
+                          {s.tiebreak1 > 0 ? s.tiebreak1.toFixed(1) : '-'}
+                        </td>
+                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">
+                          {s.tiebreak2 > 0 ? s.tiebreak2.toFixed(1) : '-'}
+                        </td>
+                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">
+                          {s.tiebreak3 > 0 ? s.tiebreak3.toFixed(1) : '-'}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
