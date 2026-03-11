@@ -1,128 +1,146 @@
 import { PrismaClient } from "@prisma/client";
-import { faker } from "@faker-js/faker";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
+import {
+  MOCK_PLAYERS,
+  MOCK_TOURNAMENTS,
+  MOCK_GP_POINTS,
+  MOCK_CLUBS,
+  MOCK_LEAGUE_STANDINGS,
+} from "../lib/mock-store";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaLibSql({
+  url: process.env.DATABASE_URL as string,
+});
+
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Seeding started...");
+  console.log("Starting seeding...");
 
-  // Clear existing data
+  // Clean the database in correct order
+  await prisma.leagueStanding.deleteMany();
   await prisma.grandPrixPoint.deleteMany();
   await prisma.score.deleteMany();
-  await prisma.pairing.deleteMany();
   await prisma.game.deleteMany();
   await prisma.tournament.deleteMany();
-  await prisma.sponsor.deleteMany();
-  await prisma.official.deleteMany();
-  await prisma.user.deleteMany();
   await prisma.player.deleteMany();
+  await prisma.club.deleteMany();
+  await prisma.user.deleteMany();
 
-  console.log("Cleared existing data.");
+  console.log("Database cleaned.");
 
-  // 1. Create Sponsors
-  const sponsors = [];
-  const sponsorNames = ["MTN Uganda", "Stanbic Bank", "Centenary Bank", "KCCA", "National Council of Sports"];
-  for (const name of sponsorNames) {
-    const s = await prisma.sponsor.create({ data: { name } });
-    sponsors.push(s);
-  }
-
-  // 2. Create Officials
-  const officials = [];
-  for (let i = 0; i < 5; i++) {
-    const o = await prisma.official.create({
+  // Seed Clubs first
+  for (const c of MOCK_CLUBS) {
+    await prisma.club.create({
       data: {
-        name: faker.person.fullName(),
-        role: faker.helpers.arrayElement(["International Arbiter", "National Arbiter", "Tournament Organizer"]),
+        id: c.id,
+        name: c.name,
+        owner: c.owner,
+        captain: c.captain,
+        founded: c.founded,
+        description: c.description,
+        logo: c.logo,
       },
     });
-    officials.push(o);
   }
+  console.log(`${MOCK_CLUBS.length} clubs seeded.`);
 
-  // 3. Create Players
-  const players = [];
-  for (let i = 0; i < 100; i++) {
-    const player = await prisma.player.create({
+  // Seed Players (linked to clubs)
+  for (const p of MOCK_PLAYERS) {
+    await prisma.player.create({
       data: {
-        name: faker.person.fullName(),
-        fideId: faker.number.int({ min: 1000000, max: 9999999 }).toString(),
-        rating: faker.number.int({ min: 800, max: 2400 }),
-        federation: "UGA",
+        id: p.id,
+        name: p.name,
+        fideId: p.fideId,
+        rating: p.rating,
+        federation: p.federation,
+        clubId: p.clubId,
       },
     });
-    players.push(player);
   }
-  console.log(`Created ${players.length} players.`);
+  console.log(`${MOCK_PLAYERS.length} players seeded.`);
 
-  // 4. Create Tournaments (Annual Calendar)
-  const tournamentNames = [
-    { name: "Uganda National Championship", gp: true },
-    { name: "K Rwabushenyi Memorial", gp: true },
-    { name: "Zabasajja Memorial", gp: true },
-    { name: "Uganda Open", gp: true },
-    { name: "Easter Chess Championship", gp: false },
-    { name: "Father Grimes Schools", gp: false },
-    { name: "Inter-University Games", gp: false },
-  ];
-
-  for (const tInfo of tournamentNames) {
-    const startDate = faker.date.future();
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 4);
-
-    const deadline = new Date(startDate);
-    deadline.setDate(startDate.getDate() - 7);
-
-    // Pick random players, sponsors, officials
-    const tPlayers = faker.helpers.arrayElements(players, 40);
-    const tSponsors = faker.helpers.arrayElements(sponsors, 2);
-    const tOfficials = faker.helpers.arrayElements(officials, 2);
-
-    const tournament = await prisma.tournament.create({
+  // Seed League Standings
+  for (const s of MOCK_LEAGUE_STANDINGS) {
+    await prisma.leagueStanding.create({
       data: {
-        name: tInfo.name,
-        description: `The annual ${tInfo.name} is a cornerstone of Ugandan Chess, bringing together the best talent across the country.`,
-        history: `First held in ${faker.number.int({ min: 1980, max: 2010 })}, this event has grown into one of the most prestigious on the calendar.`,
-        startDate,
-        endDate,
-        registrationDeadline: deadline,
-        registrationFee: faker.helpers.arrayElement([20000, 30000, 50000]),
-        prizeFund: faker.helpers.arrayElement([1000000, 2000000, 5000000]),
-        venue: `${faker.location.city()} Arena`,
-        format: "Swiss",
-        totalRounds: 8,
-        isGrandPrix: tInfo.gp,
-        players: { connect: tPlayers.map(p => ({ id: p.id })) },
-        sponsors: { connect: tSponsors.map(s => ({ id: s.id })) },
-        officials: { connect: tOfficials.map(o => ({ id: o.id })) },
+        rank: s.rank,
+        clubId: s.clubId,
+        matchPoints: s.matchPoints,
+        gamePoints: s.gamePoints,
       },
     });
+  }
+  console.log(`${MOCK_LEAGUE_STANDINGS.length} league standings seeded.`);
 
-    // If it's a Grand Prix and "finished" (mocking some points)
-    if (tInfo.gp) {
-      const topPlayers = faker.helpers.arrayElements(tPlayers, 5);
-      const points = [10, 8, 6, 4, 2];
-      for (let i = 0; i < topPlayers.length; i++) {
-        await prisma.grandPrixPoint.create({
-          data: {
-            points: points[i],
-            playerId: topPlayers[i].id,
-            tournamentId: tournament.id,
-          },
-        });
-      }
+  // Seed Tournaments
+  for (const t of MOCK_TOURNAMENTS) {
+    await prisma.tournament.create({
+      data: {
+        id: t.id,
+        name: t.name,
+        description: t.description,
+        history: t.history,
+        startDate: t.startDate,
+        endDate: t.endDate,
+        registrationDeadline: t.registrationDeadline,
+        registrationFee: t.registrationFee,
+        prizeFund: t.prizeFund,
+        venue: t.venue,
+        format: t.format,
+        totalRounds: t.totalRounds,
+        isGrandPrix: t.isGrandPrix,
+      },
+    });
+  }
+  console.log(`${MOCK_TOURNAMENTS.length} tournaments seeded.`);
+
+  // Seed Grand Prix Points
+  for (const gp of MOCK_GP_POINTS) {
+    await prisma.grandPrixPoint.create({
+      data: {
+        points: gp.points,
+        playerId: gp.playerId,
+        tournamentId: gp.tournamentId,
+      },
+    });
+  }
+  console.log(`${MOCK_GP_POINTS.length} Grand Prix records seeded.`);
+
+  // Create a default Admin User for testing
+  // Password is "password123"
+  const bcrypt = require("bcryptjs");
+  const hashedPassword = await bcrypt.hash("password123", 12);
+  
+  await prisma.user.create({
+    data: {
+      name: "Admin User",
+      email: "admin@chessfed.ug",
+      password: hashedPassword,
+      role: "ADMIN",
     }
-    console.log(`Created tournament: ${tournament.name} (GP: ${tInfo.gp})`);
-  }
+  });
+  
+  await prisma.user.create({
+    data: {
+      name: "Anthony Ngisiro",
+      email: "anthony@example.com",
+      password: hashedPassword,
+      role: "PLAYER",
+      playerId: "p1"
+    }
+  });
 
-  console.log("Seeding finished.");
+  console.log("Default users created (Pass: password123)");
+  console.log("Seeding finished successfully.");
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
   });

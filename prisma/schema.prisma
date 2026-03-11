@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model User {
@@ -15,7 +15,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          Role      @default(PLAYER)
+  password      String?
+  role          String    @default("PLAYER")
   accounts      Account[]
   sessions      Session[]
   
@@ -35,12 +36,12 @@ model Account {
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
+  refresh_token      String?
+  access_token       String?
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String?  @db.Text
+  id_token           String?
   session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -70,19 +71,75 @@ model Player {
   name            String
   rating          Int              @default(1200)
   federation      String           @default("UGA")
+  clubId          String?
+  club            Club?            @relation(fields: [clubId], references: [id])
   tournaments     Tournament[]
   whiteGames      Game[]           @relation("white_games")
   blackGames      Game[]           @relation("black_games")
+  whiteMatchGames MatchGame[]      @relation("WhiteMatchPlayer")
+  blackMatchGames MatchGame[]      @relation("BlackMatchPlayer")
   scores          Score[]
   grandPrixPoints GrandPrixPoint[]
   user            User?
 }
 
+model Club {
+  id          String   @id @default(cuid())
+  name        String
+  owner       String?
+  captain     String?
+  founded     Int?
+  description String?
+  logo        String?
+  players     Player[]
+  standings   LeagueStanding[]
+  homeMatches LeagueMatch[] @relation("HomeClub")
+  awayMatches LeagueMatch[] @relation("AwayClub")
+}
+
+model LeagueMatch {
+  id          String      @id @default(cuid())
+  date        DateTime    @default(now())
+  homeClubId  String
+  awayClubId  String
+  homeClub    Club        @relation("HomeClub", fields: [homeClubId], references: [id])
+  awayClub    Club        @relation("AwayClub", fields: [awayClubId], references: [id])
+  games       MatchGame[]
+  status      String      @default("SCHEDULED") // SCHEDULED, LIVE, COMPLETED
+}
+
+model MatchGame {
+  id            String      @id @default(cuid())
+  matchId       String
+  match         LeagueMatch @relation(fields: [matchId], references: [id])
+  type          GameType    @default(CLASSICAL)
+  whitePlayerId String
+  blackPlayerId String
+  result        String?     // "1-0", "0-1", "1/2-1/2"
+  whitePlayer   Player      @relation("WhiteMatchPlayer", fields: [whitePlayerId], references: [id])
+  blackPlayer   Player      @relation("BlackMatchPlayer", fields: [blackPlayerId], references: [id])
+}
+
+enum GameType {
+  CLASSICAL
+  RAPID
+  BLITZ
+}
+
+model LeagueStanding {
+  id          String @id @default(cuid())
+  rank        Int
+  clubId      String
+  club        Club   @relation(fields: [clubId], references: [id])
+  matchPoints Int
+  gamePoints  Float
+}
+
 model Tournament {
   id                   String           @id @default(cuid())
   name                 String
-  description          String?          @db.Text
-  history              String?          @db.Text
+  description          String?
+  history              String?
   startDate            DateTime
   endDate            DateTime
   registrationDeadline DateTime?
@@ -114,7 +171,7 @@ model GrandPrixPoint {
 
 model Sponsor {
   id           String       @id @default(cuid())
-  name         String
+  name                 String
   logoUrl      String?
   tournaments  Tournament[]
 }
