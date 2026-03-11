@@ -3,20 +3,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import LogoutButton from "./LogoutButton";
 
 export default async function PlayerDashboardPage() {
-  // --- PREVIEW MODE BYPASS ---
-  // const session = await getServerSession(authOptions);
-  // if (!session?.user) redirect("/login");
-  const session = { user: { name: "Anthony Ngisiro", email: "anthony@example.com" } };
-  // ---------------------------
-
-  // Find ANY player from the database to show the layout
-  const firstPlayer = await prisma.player.findFirst();
+  const session = await getServerSession(authOptions);
+  if (!session?.user) redirect("/login");
 
   // Find the player associated with this user
-  const user = await prisma.user.findFirst({
-    where: { playerId: firstPlayer?.id },
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email! },
     include: {
       player: {
         include: {
@@ -32,7 +27,7 @@ export default async function PlayerDashboardPage() {
     }
   });
 
-  const player = user?.player || firstPlayer; // Fallback to first player for preview
+  const player = user?.player;
   const totalGPPoints = player?.grandPrixPoints.reduce((sum: number, gp: any) => sum + gp.points, 0) || 0;
 
   return (
@@ -46,9 +41,7 @@ export default async function PlayerDashboardPage() {
             </Link>
             <div className="flex items-center gap-6">
               <Link href="/tournaments" className="text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-blue-600 transition-colors">Find Tournaments</Link>
-              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-                {session.user.name?.substring(0, 1) || "P"}
-              </div>
+              <LogoutButton />
             </div>
           </div>
         </div>
