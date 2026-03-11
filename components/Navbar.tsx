@@ -68,7 +68,7 @@ export default function Navbar() {
               </Link>
             ) : (
               <Link 
-                href="/dashboard" 
+                href="/login" 
                 className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20"
               >
                 Member Portal
@@ -127,7 +127,7 @@ export default function Navbar() {
                 </Link>
               ) : (
                 <Link 
-                  href="/dashboard" 
+                  href="/login" 
                   className="block w-full text-center px-5 py-3 text-base font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20"
                 >
                   Member Portal

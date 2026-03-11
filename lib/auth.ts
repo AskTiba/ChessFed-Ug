@@ -52,6 +52,10 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+    newUser: "/register",
+  },
   callbacks: {
     async session({ token, session }) {
       if (token && session.user) {
