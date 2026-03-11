@@ -1,11 +1,19 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function LeagueStandingsPage() {
   const standings = await prisma.leagueStanding.findMany({
     orderBy: { rank: 'asc' },
     include: { club: true }
   });
+
+  // Diagnostic Log
+  if (standings.length > 0) {
+    console.log("DEBUG - RECORD KEYS:", Object.keys(standings[0]));
+    console.log("DEBUG - FIRST RECORD DATA:", JSON.stringify(standings[0], null, 2));
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950 font-sans pb-20 text-white">
@@ -14,7 +22,7 @@ export default async function LeagueStandingsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Link href="/" className="text-xl font-bold tracking-tighter text-white">
-              ♟️ ChessFed<span className="text-blue-500">UG</span>
+              ♟️ ChessFed<span className="text-blue-600">UG</span>
             </Link>
             <div className="flex gap-8">
               <Link href="/clubs" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Clubs Directory</Link>
@@ -48,34 +56,50 @@ export default async function LeagueStandingsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3">
             <div className="bg-zinc-900 rounded-[2.5rem] border border-zinc-800 shadow-2xl overflow-hidden">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="bg-zinc-800/50 border-b border-zinc-800">
-                    <th className="px-8 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Rank</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Club</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center">MP</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">GP</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800">
-                  {standings.map((s: any, idx: number) => (
-                    <tr key={idx} className="group hover:bg-white/5 transition-colors">
-                      <td className="px-8 py-6">
-                        <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-black text-xs ${idx === 0 ? 'bg-yellow-500 text-black' : idx < 3 ? 'bg-blue-600 text-white' : 'text-zinc-500 border border-zinc-800'}`}>
-                          {s.rank}
-                        </span>
-                      </td>
-                      <td className="px-8 py-6">
-                        <Link href={`/clubs/${s.clubId}`} className="font-bold text-zinc-100 group-hover:text-yellow-500 transition-colors">
-                          {s.club.name}
-                        </Link>
-                      </td>
-                      <td className="px-8 py-6 text-center font-black text-zinc-100">{s.matchPoints}</td>
-                      <td className="px-8 py-6 text-right font-black text-blue-400 italic">{s.gamePoints.toFixed(1)}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left min-w-[800px]">
+                  <thead>
+                    <tr className="bg-zinc-800/50 border-b border-zinc-800">
+                      <th className="px-6 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Rank</th>
+                      <th className="px-6 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Club</th>
+                      <th className="px-3 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center">P</th>
+                      <th className="px-3 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center">+</th>
+                      <th className="px-3 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center">=</th>
+                      <th className="px-3 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center">-</th>
+                      <th className="px-6 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center">MP</th>
+                      <th className="px-6 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center">BP</th>
+                      <th className="px-4 py-6 text-[10px] font-black text-zinc-600 uppercase tracking-widest text-right">TB1</th>
+                      <th className="px-4 py-6 text-[10px] font-black text-zinc-600 uppercase tracking-widest text-right">TB2</th>
+                      <th className="px-4 py-6 text-[10px] font-black text-zinc-600 uppercase tracking-widest text-right">TB3</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-800">
+                    {standings.map((s: any, idx: number) => (
+                      <tr key={idx} className="group hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-6">
+                          <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-black text-xs ${idx === 0 ? 'bg-yellow-500 text-black' : idx < 3 ? 'bg-blue-600 text-white' : 'text-zinc-500 border border-zinc-800'}`}>
+                            {s.rank}
+                          </span>
+                        </td>
+                        <td className="px-6 py-6">
+                          <Link href={`/clubs/${s.clubId}`} className="font-bold text-zinc-100 group-hover:text-yellow-500 transition-colors whitespace-nowrap">
+                            {s.club?.name || 'Unknown Club'}
+                          </Link>
+                        </td>
+                        <td className="px-3 py-6 text-center font-bold text-zinc-100">{s.played ?? '??'}</td>
+                        <td className="px-3 py-6 text-center font-bold text-emerald-400">{s.won ?? '??'}</td>
+                        <td className="px-3 py-6 text-center font-bold text-zinc-300">{s.drawn ?? '??'}</td>
+                        <td className="px-3 py-6 text-center font-bold text-rose-400">{s.lost ?? '??'}</td>
+                        <td className="px-6 py-6 text-center font-black text-zinc-100">{s.matchPoints ?? '??'}</td>
+                        <td className="px-6 py-6 text-center font-black text-blue-400 italic">{s.gamePoints?.toFixed(1) ?? '??'}</td>
+                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">{(s.tiebreak1 ?? 0).toFixed(1)}</td>
+                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">{(s.tiebreak2 ?? 0).toFixed(1)}</td>
+                        <td className="px-4 py-6 text-right text-[10px] font-bold text-zinc-500 tabular-nums">{(s.tiebreak3 ?? 0).toFixed(1)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
@@ -88,8 +112,8 @@ export default async function LeagueStandingsPage() {
                   <span className="text-right italic text-zinc-400">Match Points (2 for win, 1 for draw)</span>
                 </div>
                 <div className="flex justify-between text-[10px]">
-                  <span className="font-black text-zinc-500 uppercase">GP</span>
-                  <span className="text-right italic text-zinc-400">Game Points (Individual board wins)</span>
+                  <span className="font-black text-zinc-500 uppercase">BP</span>
+                  <span className="text-right italic text-zinc-400">Board Points (Individual board wins)</span>
                 </div>
               </div>
             </div>

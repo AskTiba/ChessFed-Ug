@@ -131,8 +131,15 @@ model LeagueStanding {
   rank        Int
   clubId      String
   club        Club   @relation(fields: [clubId], references: [id])
+  played      Int    @default(0)
+  won         Int    @default(0)
+  drawn       Int    @default(0)
+  lost        Int    @default(0)
   matchPoints Int
   gamePoints  Float
+  tiebreak1   Float  @default(0)
+  tiebreak2   Float  @default(0)
+  tiebreak3   Float  @default(0)
 }
 
 model Tournament {

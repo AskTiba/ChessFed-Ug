@@ -66,8 +66,15 @@ async function main() {
       data: {
         rank: s.rank,
         clubId: s.clubId,
+        played: s.played,
+        won: s.won,
+        drawn: s.drawn,
+        lost: s.lost,
         matchPoints: s.matchPoints,
         gamePoints: s.gamePoints,
+        tiebreak1: (s as any).tb1 || 0,
+        tiebreak2: (s as any).tb2 || 0,
+        tiebreak3: (s as any).tb3 || 0,
       },
     });
   }
