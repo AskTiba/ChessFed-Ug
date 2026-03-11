@@ -17,6 +17,8 @@ const registerSchema = z.object({
   path: ["confirmPassword"],
 });
 
+import { registerUser } from "./actions";
+
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
@@ -33,11 +35,25 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
-    // Simulation Mode
-    setTimeout(() => {
-      alert("Account Created Successfully! (Simulation Mode)");
+    try {
+      const result = await registerUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (result.error) {
+        alert(result.error);
+        setIsLoading(false);
+        return;
+      }
+
+      alert("Account Created Successfully! You can now log in.");
       router.push("/login");
-    }, 1500);
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (

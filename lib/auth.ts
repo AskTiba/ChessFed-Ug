@@ -3,6 +3,7 @@ import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -21,16 +22,33 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // This is a placeholder. In a real app, you'd check a hashed password.
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Missing credentials");
+        }
         
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
-        if (!user) return null;
+        if (!user || !user.password) {
+          throw new Error("Invalid credentials");
+        }
 
-        return user;
+        const isPasswordCorrect = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isPasswordCorrect) {
+          throw new Error("Invalid credentials");
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],
@@ -38,6 +56,7 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }) {
       if (token && session.user) {
         (session.user as any).id = token.id as string;
+        (session.user as any).role = token.role as string;
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.image = token.picture;
@@ -64,6 +83,7 @@ export const authOptions: NextAuthOptions = {
         name: dbUser.name,
         email: dbUser.email,
         picture: dbUser.image,
+        role: dbUser.role,
       };
     },
   },

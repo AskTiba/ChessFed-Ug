@@ -1,11 +1,6 @@
-// Mock Auth API for UI Simulation
-const handler = (req: any, res: any) => {
-  return new Response(JSON.stringify({ 
-    user: { name: "Anthony Ngisiro", email: "anthony@example.com" } 
-  }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" }
-  });
-};
+import { authOptions } from "@/lib/auth";
+import NextAuth from "next-auth";
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

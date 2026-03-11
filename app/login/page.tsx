@@ -12,6 +12,8 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+import { signIn } from "next-auth/react";
+
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
@@ -31,15 +33,24 @@ export default function LoginPage() {
     setIsLoading(true);
     setServerError(null);
 
-    // Simulation Mode
-    setTimeout(() => {
-      if (data.email === "admin@chessfed.ug" || data.email === "anthony@example.com") {
-        router.push("/dashboard");
-      } else {
-        setServerError("Invalid credentials. Try anthony@example.com");
+    try {
+      const res = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        setServerError("Invalid credentials. Please try again.");
         setIsLoading(false);
+      } else {
+        router.push("/dashboard");
+        router.refresh();
       }
-    }, 1500);
+    } catch (error) {
+      setServerError("An unexpected error occurred. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
