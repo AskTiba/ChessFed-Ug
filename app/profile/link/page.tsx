@@ -25,7 +25,7 @@ export default async function LinkProfilePage(props: {
     ? await prisma.player.findMany({
         where: {
           AND: [
-            { name: { contains: query, mode: 'insensitive' } },
+            { name: { contains: query } },
             { user: null } // Only show players NOT yet linked to an account
           ]
         },

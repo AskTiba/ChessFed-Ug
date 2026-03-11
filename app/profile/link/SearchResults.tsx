@@ -6,9 +6,9 @@ import { linkPlayerAction } from "./actions";
 import { useRouter } from "next/navigation";
 
 interface FidePlayer {
-  id: number;
+  fideid: number;
   name: string;
-  federation: string;
+  country: string;
   rating: number;
   title?: string;
 }
@@ -20,14 +20,37 @@ interface SearchResultsProps {
 
 async function searchFidePlayers(query: string) {
   if (!query || query.length < 3) return [];
+
+  // 1. If it's a FIDE ID, use Lichess API (same as rankings page)
+  if (/^\d+$/.test(query)) {
+    try {
+      const res = await fetch(`https://lichess.org/api/fide/player/${query}`);
+      if (res.ok) {
+        const data = await res.json();
+        return [{
+          fideid: parseInt(data.id),
+          name: data.name,
+          country: data.federation,
+          rating: data.standard,
+          title: data.title
+        }] as FidePlayer[];
+      }
+    } catch (e) {
+      console.error("Lichess lookup failed", e);
+    }
+  }
   
-  // Searching the mirror for Ugandan players matching the query
-  const res = await fetch(`https://fide-players.fly.dev/players/players.json?country=UGA&_size=10`);
-  if (!res.ok) return [];
-  const data = await res.json();
-  
-  const players = data.rows as FidePlayer[];
-  return players.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+  // 2. Otherwise, use the Fly.io mirror for name searches (matching rankings page exactly)
+  try {
+    const url = `https://fide-players.fly.dev/players/players.json?name__contains=${encodeURIComponent(query)}&country=UGA&_size=10`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.rows as FidePlayer[];
+  } catch (e) {
+    console.error("FIDE Mirror search failed", e);
+    return [];
+  }
 }
 
 export default function SearchResults({ initialQuery, localPlayers }: SearchResultsProps) {
@@ -35,41 +58,50 @@ export default function SearchResults({ initialQuery, localPlayers }: SearchResu
   const router = useRouter();
 
   const { data: fidePlayers, isLoading: isLoadingFide } = useQuery({
-    queryKey: ["fide-search", initialQuery],
-    queryFn: () => searchFidePlayers(initialQuery),
-    enabled: initialQuery.length >= 3,
+    queryKey: ["fide-search", initialQuery.trim()],
+    queryFn: () => searchFidePlayers(initialQuery.trim()),
+    enabled: initialQuery.trim().length >= 3,
   });
 
   const handleLink = async (playerId: string, isFide: boolean, fideData?: any) => {
     setIsLinking(playerId);
     
-    // If it's a FIDE player not in our DB, we'd need a different action or handle it in the same one
-    // For now, let's assume we can pass the data to linkPlayerAction which will handle import if needed
-    const result = await linkPlayerAction(playerId, isFide ? fideData : undefined);
+    // Normalize data for the link action
+    const finalData = isFide ? {
+      name: fideData.name,
+      fideId: (fideData.fideid || fideData.fideId).toString(),
+      rating: fideData.rating
+    } : undefined;
+    
+    const result = await linkPlayerAction(playerId, finalData);
     
     if (result.success) {
       router.push("/dashboard");
+      router.refresh();
     } else {
       alert(result.error);
       setIsLinking(null);
     }
   };
 
-  if (!initialQuery) return null;
+  const trimmedQuery = initialQuery.trim();
+  if (!trimmedQuery) return null;
 
   const combinedPlayers = [...localPlayers.map(p => ({ ...p, isLocal: true }))];
   
   // Add FIDE players that aren't already in local results (avoid duplicates)
   if (fidePlayers) {
     fidePlayers.forEach(fp => {
-      if (!combinedPlayers.some(lp => lp.fideId === fp.id.toString())) {
+      const fideIdStr = fp.fideid.toString();
+      if (!combinedPlayers.some(lp => lp.fideId === fideIdStr)) {
         combinedPlayers.push({
-          id: fp.id.toString(),
+          id: `fide-${fideIdStr}`,
           name: fp.name,
-          fideId: fp.id.toString(),
+          fideId: fideIdStr,
           rating: fp.rating,
           isLocal: false,
-          title: fp.title
+          title: fp.title,
+          fideid: fp.fideid // Keep for handleLink
         } as any);
       }
     });
