@@ -3,7 +3,8 @@ import { prisma } from "@/lib/prisma";
 
 export default async function LeagueStandingsPage() {
   const standings = await prisma.leagueStanding.findMany({
-    orderBy: { rank: 'asc' }
+    orderBy: { rank: 'asc' },
+    include: { club: true }
   });
 
   return (
@@ -65,11 +66,11 @@ export default async function LeagueStandingsPage() {
                         </span>
                       </td>
                       <td className="px-8 py-6">
-                        <Link href={`/clubs/${s.clubId}`} className="font-bold text-white group-hover:text-yellow-500 transition-colors">
-                          {s.name}
+                        <Link href={`/clubs/${s.clubId}`} className="font-bold text-zinc-100 group-hover:text-yellow-500 transition-colors">
+                          {s.club.name}
                         </Link>
                       </td>
-                      <td className="px-8 py-6 text-center font-black text-white">{s.matchPoints}</td>
+                      <td className="px-8 py-6 text-center font-black text-zinc-100">{s.matchPoints}</td>
                       <td className="px-8 py-6 text-right font-black text-blue-400 italic">{s.gamePoints.toFixed(1)}</td>
                     </tr>
                   ))}
