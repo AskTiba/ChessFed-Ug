@@ -2,7 +2,9 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export default async function LeagueStandingsPage() {
-  const standings = await prisma.leagueStanding.findMany();
+  const standings = await prisma.leagueStanding.findMany({
+    orderBy: { rank: 'asc' }
+  });
 
   return (
     <div className="min-h-screen bg-zinc-950 font-sans pb-20 text-white">
