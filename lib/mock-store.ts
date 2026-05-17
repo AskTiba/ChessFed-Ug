@@ -161,240 +161,530 @@ export const MOCK_PODIUMS = [
 
 // --- TOURNAMENTS WITH HISTORY ---
 export const MOCK_TOURNAMENTS = [
-  // --- MAJOR CHAMPIONSHIPS ---
+  // ==========================================
+  // 1. UGANDA NATIONAL JUNIORS CHESS CHAMPIONSHIPS
+  // ==========================================
   {
-    id: "t1",
-    name: "Uganda National Chess Championship (Super 12)",
-    description: "National Title + Olympiad Team selection. Qualifies for Chess Olympiad 2026 Samarkand.",
-    history: "The flagship event defining the national champion. Hosted at Lugogo Indoor Stadium.",
+    id: "t_juniors_2026",
+    name: "Uganda National Juniors Chess Championships 2026",
+    description: "The premier Under-20 national championship. Top finishers qualify for the African Youth Chess Championship.",
+    history: "An annual youth showcase representing the absolute future of Ugandan chess excellence, drawing talent from all four regions of the country.",
+    startDate: new Date("2026-04-10"),
+    endDate: new Date("2026-04-13"),
+    registrationDeadline: new Date("2026-04-05"),
+    registrationFee: 25000,
+    prizeFund: 4000000,
+    venue: "Nob View Hotel, Kampala",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: false
+  },
+  {
+    id: "t_juniors_2025",
+    name: "Uganda National Juniors Chess Championships 2025",
+    description: "Under-20 national championship (2025 Edition). Won by FM Harold Wanyama's junior prodigies.",
+    history: "A historic edition where the youth of Uganda fought fiercely at Makerere University.",
+    startDate: new Date("2025-04-12"),
+    endDate: new Date("2025-04-15"),
+    registrationDeadline: new Date("2025-04-05"),
+    registrationFee: 20000,
+    prizeFund: 3000000,
+    venue: "Makerere University Main Hall, Kampala",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: false
+  },
+  {
+    id: "t_juniors_2024",
+    name: "Uganda National Juniors Chess Championships 2024",
+    description: "Under-20 national championship (2024 Edition). Completed with record turnout of school players.",
+    history: "Held at Makerere University, this event established several new national candidate masters.",
+    startDate: new Date("2024-04-15"),
+    endDate: new Date("2024-04-18"),
+    registrationDeadline: new Date("2024-04-10"),
+    registrationFee: 15000,
+    prizeFund: 2000000,
+    venue: "Makerere University Main Hall, Kampala",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: false
+  },
+
+  // ==========================================
+  // 2. SUPER 12 NATIONAL CHAMPIONSHIP
+  // ==========================================
+  {
+    id: "t_super12_2026",
+    name: "Super 12 National Chess Championship 2026",
+    description: "The ultimate round-robin tournament for Uganda's top 12 players. The official qualifier for the Chess Olympiad 2026 in Samarkand.",
+    history: "The crown jewel of the Uganda Chess Federation calendar. Only the top 12 rated players in the country receive an invite to this grueling battle.",
     startDate: new Date("2026-06-15"),
     endDate: new Date("2026-06-20"),
     registrationDeadline: new Date("2026-06-01"),
     registrationFee: 50000,
-    prizeFund: 10000000,
-    venue: "Lugogo Indoor Stadium, Kampala",
+    prizeFund: 15000000,
+    venue: "MTN Arena, Lugogo, Kampala",
     format: "Round Robin",
     totalRounds: 11,
-    isGrandPrix: true,
-    sponsors: [{ name: "MTN Uganda" }, { name: "NCS" }],
-    officials: [{ name: "IA Stephen Kisuze", role: "Chief Arbiter" }],
-    _count: { players: 12 },
-    archives: [2024, 2023, 2022, 2021]
+    isGrandPrix: true
   },
   {
-    id: "t2",
-    name: "Uganda Open Chess Championship",
-    description: "Flagship Open (IM norms). Qualifies for Grand Prix Winner.",
-    history: "A premier international open attracting masters across East Africa.",
-    startDate: new Date("2025-11-10"),
-    endDate: new Date("2025-11-15"),
-    registrationDeadline: new Date("2025-11-01"),
-    registrationFee: 40000,
-    prizeFund: 6000000,
-    venue: "Hotel Africana",
-    format: "Swiss",
-    totalRounds: 9,
-    isGrandPrix: true,
-    sponsors: [{ name: "Stanbic Bank" }],
-    officials: [{ name: "NA Christopher Turyahabwe", role: "Arbiter" }],
-    _count: { players: 120 },
-    archives: [2024, 2023, 2022]
+    id: "t_super12_2025",
+    name: "Super 12 National Chess Championship 2025",
+    description: "The 2025 edition of the top-12 national championship. Won by IM Arthur Ssegwanyi in a thrilling final round.",
+    history: "An intense round-robin battle hosted at MTN Arena Lugogo that determined the team representing Uganda in international opens.",
+    startDate: new Date("2025-06-10"),
+    endDate: new Date("2025-06-15"),
+    registrationDeadline: new Date("2025-06-01"),
+    registrationFee: 50000,
+    prizeFund: 12000000,
+    venue: "MTN Arena, Lugogo, Kampala",
+    format: "Round Robin",
+    totalRounds: 11,
+    isGrandPrix: true
   },
+
+  // ==========================================
+  // 3. WOMEN'S CHESS RAPID
+  // ==========================================
   {
-    id: "t3",
-    name: "National Schools Team Championship",
-    description: "Largest youth event (1100+ kids). Qualifies for National Juniors.",
-    history: "The heartbeat of grassroots chess in Uganda.",
-    startDate: new Date("2025-05-20"),
-    endDate: new Date("2025-05-25"),
-    registrationDeadline: new Date("2025-05-10"),
-    registrationFee: 10000,
-    prizeFund: 0,
-    venue: "St. Mary's College Kisubi",
-    format: "Team Swiss",
+    id: "t_women_rapid_2026",
+    name: "Women's Chess Rapid 2026",
+    description: "Special rapid tournament dedicated exclusively to celebrating and promoting female players across East Africa.",
+    history: "Organized annually in honor of International Women's Day to foster female master-level play in Uganda.",
+    startDate: new Date("2026-03-08"),
+    endDate: new Date("2026-03-08"),
+    registrationDeadline: new Date("2026-03-05"),
+    registrationFee: 15000,
+    prizeFund: 2500000,
+    venue: "Sheraton Hotel, Kampala",
+    format: "Rapid",
     totalRounds: 7,
-    isGrandPrix: false,
-    sponsors: [{ name: "City Parents" }],
-    officials: [{ name: "NA FA", role: "Organizer" }],
-    _count: { players: 1100 }
+    isGrandPrix: false
   },
   {
-    id: "t4",
-    name: "National Juniors Championship",
-    description: "U20 National Title. Qualifies for African Youths.",
-    history: "The battle for the next generation of masters.",
-    startDate: new Date("2025-08-15"),
-    endDate: new Date("2025-08-18"),
-    registrationDeadline: new Date("2025-08-05"),
-    registrationFee: 20000,
-    prizeFund: 3000000,
-    venue: "Makerere University",
+    id: "t_women_rapid_2025",
+    name: "Women's Chess Rapid 2025",
+    description: "2025 Edition of the prestigious International Women's Day rapid tournament. Crowned by WFM Shakira Ampaire.",
+    history: "Hosted at the Sheraton Hotel with massive corporate backing to empower local female players.",
+    startDate: new Date("2025-03-08"),
+    endDate: new Date("2025-03-08"),
+    registrationDeadline: new Date("2025-03-05"),
+    registrationFee: 10000,
+    prizeFund: 2000000,
+    venue: "Sheraton Hotel, Kampala",
+    format: "Rapid",
+    totalRounds: 7,
+    isGrandPrix: false
+  },
+
+  // ==========================================
+  // 4. CENTRAL UGANDA OPEN CHESS CHAMPIONSHIP-GP
+  // ==========================================
+  {
+    id: "t_central_open_2026",
+    name: "Central Uganda Open Chess Championship 2026",
+    description: "Grand Prix Event #1. The opening major tournament of the 2026 season for central region chess clubs.",
+    history: "Traditionally attracts the highest density of FIDE-rated masters in Kampala. A critical test of early season form.",
+    startDate: new Date("2026-02-20"),
+    endDate: new Date("2026-02-22"),
+    registrationDeadline: new Date("2026-02-15"),
+    registrationFee: 30000,
+    prizeFund: 5000000,
+    venue: "Sheraton Hotel, Kampala",
     format: "Swiss",
     totalRounds: 8,
-    isGrandPrix: false,
-    _count: { players: 80 }
+    isGrandPrix: true
   },
   {
-    id: "t5",
-    name: "Kantinti Memorial Open",
-    description: "Grand Prix #1 (8x Olympian namesake).",
-    history: "Named after the legendary Olympian Kantinti.",
+    id: "t_central_open_2025",
+    name: "Central Uganda Open Chess Championship 2025",
+    description: "Grand Prix Event #1 (2025 Edition). Set the stage for a tight Grand Prix race.",
+    history: "Hosted at Sheraton Hotel, featuring several international arbiters and regional masters.",
+    startDate: new Date("2025-02-22"),
+    endDate: new Date("2025-02-24"),
+    registrationDeadline: new Date("2025-02-15"),
+    registrationFee: 30000,
+    prizeFund: 4000000,
+    venue: "Sheraton Hotel, Kampala",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: true
+  },
+
+  // ==========================================
+  // 5. WESTERN UGANDA OPEN CHESS CHAMPIONSHIP-GP
+  // ==========================================
+  {
+    id: "t_western_open_2026",
+    name: "Western Uganda Open Chess Championship 2026",
+    description: "Grand Prix Event #2. The regional showcase representing the rapid growth of chess in Western Uganda.",
+    history: "Organized to expand competitive FIDE rated tournaments beyond the capital city of Kampala.",
+    startDate: new Date("2026-03-25"),
+    endDate: new Date("2026-03-27"),
+    registrationDeadline: new Date("2026-03-20"),
+    registrationFee: 30000,
+    prizeFund: 4000000,
+    venue: "Pelikan Hotel, Mbarara",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: true
+  },
+  {
+    id: "t_western_open_2025",
+    name: "Western Uganda Open Chess Championship 2025",
+    description: "Grand Prix Event #2 (2025 Edition). Broke attendance records for regional events.",
+    history: "Mbarara welcomed players from Rwanda and Western Uganda for a highly competitive weekend.",
+    startDate: new Date("2025-03-20"),
+    endDate: new Date("2025-03-22"),
+    registrationDeadline: new Date("2025-03-15"),
+    registrationFee: 25000,
+    prizeFund: 3500000,
+    venue: "Pelikan Hotel, Mbarara",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: true
+  },
+
+  // ==========================================
+  // 6. FATHER GRIMES NATIONAL SCHOOLS CHESS CHAMPIONSHIP
+  // ==========================================
+  {
+    id: "t_father_grimes_2026",
+    name: "Father Grimes National Schools Chess Championship 2026",
+    description: "The absolute largest school chess tournament in East Africa, gathering over 1,200 junior chess champions.",
+    history: "Named in honor of Father Grimes, a legendary educator and patron who introduced organized schools chess to Uganda.",
+    startDate: new Date("2026-05-10"),
+    endDate: new Date("2026-05-15"),
+    registrationDeadline: new Date("2026-05-01"),
+    registrationFee: 15000,
+    prizeFund: 0,
+    venue: "St. Mary's College Kisubi, Entebbe",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: false
+  },
+  {
+    id: "t_father_grimes_2025",
+    name: "Father Grimes National Schools Chess Championship 2025",
+    description: "2025 School Championship. Gayaza High School hosted a stunning 5-day tournament.",
+    history: "A premier youth sports event where students from across Uganda represented their school banners.",
+    startDate: new Date("2025-05-12"),
+    endDate: new Date("2025-05-17"),
+    registrationDeadline: new Date("2025-05-05"),
+    registrationFee: 12000,
+    prizeFund: 0,
+    venue: "Gayaza High School, Gayaza",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: false
+  },
+
+  // ==========================================
+  // 7. AFRICA YOUTH CHESS CHAMPIONSHIP
+  // ==========================================
+  {
+    id: "t_africa_youth_2026",
+    name: "Africa Youth Chess Championship 2026",
+    description: "Continental Event hosted by Uganda. FIDE Direct titles (WIM, WFM, CM, FM) and World Youth Championship qualification at stake.",
+    history: "The Uganda Chess Federation welcomes young champions from all 54 African countries to Speke Resort Munyonyo.",
+    startDate: new Date("2026-08-15"),
+    endDate: new Date("2026-08-23"),
+    registrationDeadline: new Date("2026-07-15"),
+    registrationFee: 100000,
+    prizeFund: 0,
+    venue: "Speke Resort Munyonyo, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: false
+  },
+
+  // ==========================================
+  // 8. NORTHERN UGANDA OPEN CHESS CHAMPIONSHIP-GP
+  // ==========================================
+  {
+    id: "t_northern_open_2026",
+    name: "Northern Uganda Open Chess Championship 2026",
+    description: "Grand Prix Event #3. Driving competitive master-level chess to the Gulu sports hub.",
+    history: "Part of the federation's aggressive decentralization initiative to foster northern talent.",
+    startDate: new Date("2026-07-10"),
+    endDate: new Date("2026-07-12"),
+    registrationDeadline: new Date("2026-07-05"),
+    registrationFee: 30000,
+    prizeFund: 4000000,
+    venue: "Gulu University Hall, Gulu",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: true
+  },
+
+  // ==========================================
+  // 9. EASTERN UGANDA OPEN CHESS CHAMPIONSHIP-GP
+  // ==========================================
+  {
+    id: "t_eastern_open_2026",
+    name: "Eastern Uganda Open Chess Championship 2026",
+    description: "Grand Prix Event #4. Hosted in the historic city of Jinja, by the source of the Nile River.",
+    history: "A popular tournament drawing chess masters from across Eastern Uganda and Western Kenya.",
+    startDate: new Date("2026-09-04"),
+    endDate: new Date("2026-09-06"),
+    registrationDeadline: new Date("2026-08-28"),
+    registrationFee: 30000,
+    prizeFund: 4000000,
+    venue: "Sunset Hotel, Jinja",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: true
+  },
+
+  // ==========================================
+  // 10. AFRICA INDIVIDUAL CHESS CHAMPIONSHIP
+  // ==========================================
+  {
+    id: "t_africa_individual_2026",
+    name: "Africa Individual Chess Championship 2026",
+    description: "The peak continental championship for senior master-level players. Serves as a World Cup qualifier.",
+    history: "Hosting this event is a historic honor for the Uganda Chess Federation, cementing Kampala as an African chess capital.",
+    startDate: new Date("2026-10-01"),
+    endDate: new Date("2026-10-09"),
+    registrationDeadline: new Date("2026-09-15"),
+    registrationFee: 120000,
+    prizeFund: 20000000,
+    venue: "Mestil Hotel, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: false
+  },
+
+  // ==========================================
+  // 11. AFRICAN SCHOOLS TEAMS CHAMPIONSHIP
+  // ==========================================
+  {
+    id: "t_african_schools_teams_2026",
+    name: "African Schools Teams Championship 2026",
+    description: "Continental team tournament. Schools represent their respective countries in teams of 4.",
+    history: "Promoting institutional team cohesion and continental academic exchanges through the medium of chess.",
+    startDate: new Date("2026-11-20"),
+    endDate: new Date("2026-11-25"),
+    registrationDeadline: new Date("2026-11-10"),
+    registrationFee: 80000,
+    prizeFund: 0,
+    venue: "Speke Resort Munyonyo, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: false
+  },
+
+  // ==========================================
+  // 12. UGANDA OPEN CHESS CHAMPIONSHIP-GP
+  // ==========================================
+  {
+    id: "t_uganda_open_2026",
+    name: "Uganda Open Chess Championship 2026",
+    description: "Grand Prix Event #5. The annual, international flagship open event. IM and GM norm opportunities.",
+    history: "The historically largest and most prestigious open tournament in Uganda, welcoming international masters from across the globe.",
+    startDate: new Date("2026-11-10"),
+    endDate: new Date("2026-11-15"),
+    registrationDeadline: new Date("2026-11-01"),
+    registrationFee: 40000,
+    prizeFund: 10000000,
+    venue: "Hotel Africana, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: true
+  },
+  {
+    id: "t_uganda_open_2025",
+    name: "Uganda Open Chess Championship 2025",
+    description: "Grand Prix Event #5 (2025 Edition). Attracted over 150 players from 6 different nations.",
+    history: "Crowned at Hotel Africana after a fierce 9-round battle under Chief Arbiter IA Stephen Kisuze.",
+    startDate: new Date("2025-11-12"),
+    endDate: new Date("2025-11-17"),
+    registrationDeadline: new Date("2025-11-05"),
+    registrationFee: 40000,
+    prizeFund: 8000000,
+    venue: "Hotel Africana, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: true
+  },
+
+  // ==========================================
+  // 13. RWABUSHENYI MEMORIAL OPEN CHESS TOURNAMENT-GP
+  // ==========================================
+  {
+    id: "t_rwabushenyi_2026",
+    name: "Rwabushenyi Memorial Open Chess Tournament 2026",
+    description: "Grand Prix Event #6. Held in honor of the late Joaquin Rwabushenyi, a pioneer and former chairman of UCF.",
+    history: "A mandatory fixture on the UCF calendar, sponsored by Civil Aviation Authority, representing extreme national pride.",
+    startDate: new Date("2026-12-04"),
+    endDate: new Date("2026-12-07"),
+    registrationDeadline: new Date("2026-11-28"),
+    registrationFee: 40000,
+    prizeFund: 8000000,
+    venue: "Hotel Africana, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: true
+  },
+  {
+    id: "t_rwabushenyi_2025",
+    name: "Rwabushenyi Memorial Open Chess Tournament 2025",
+    description: "Grand Prix Event #6 (2025 Edition). A thrilling tournament of 9 rounds representing the pinnacle of end-of-year forms.",
+    history: "Held at Hotel Africana, sponsored by UCAA, drawing huge crowds and national press coverage.",
+    startDate: new Date("2025-12-05"),
+    endDate: new Date("2025-12-08"),
+    registrationDeadline: new Date("2025-11-28"),
+    registrationFee: 45000,
+    prizeFund: 7000000,
+    venue: "Hotel Africana, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: true
+  },
+
+  // ==========================================
+  // 14. KANTINTI MEMORIAL OPEN CHESS TOURNAMENT-GP
+  // ==========================================
+  {
+    id: "t_kantinti_2026",
+    name: "Kantinti Memorial Open Chess Tournament 2026",
+    description: "Dedicated to the late George Kantinti, a beloved eight-time Olympian and chess master.",
+    history: "A memorial event designed to promote technical precision and classical time controls among local youth and seniors.",
+    startDate: new Date("2026-02-12"),
+    endDate: new Date("2026-02-14"),
+    registrationDeadline: new Date("2026-02-05"),
+    registrationFee: 30000,
+    prizeFund: 3000000,
+    venue: "Kyambogo University, Kampala",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: true
+  },
+  {
+    id: "t_kantinti_2025",
+    name: "Kantinti Memorial Open Chess Tournament 2025",
+    description: "2025 Edition honoring George Kantinti. A historic Swiss that opened the competitive year.",
+    history: "Hosted at Kyambogo University Main Hall, this event featured top-class tactical battles.",
     startDate: new Date("2025-02-10"),
     endDate: new Date("2025-02-12"),
     registrationDeadline: new Date("2025-02-05"),
     registrationFee: 30000,
     prizeFund: 2000000,
-    venue: "Kyambogo University",
+    venue: "Kyambogo University, Kampala",
     format: "Swiss",
     totalRounds: 8,
-    isGrandPrix: true,
-    _count: { players: 90 }
-  },
-  {
-    id: "t6",
-    name: "Kireka Open Championship",
-    description: "Grand Prix #4. Significant for GP + National Rating.",
-    history: "Traditionally hosted by Kireka Chess Club.",
-    startDate: new Date("2025-09-05"),
-    endDate: new Date("2025-09-07"),
-    registrationDeadline: new Date("2025-08-28"),
-    registrationFee: 30000,
-    prizeFund: 2000000,
-    venue: "Sports View Hotel",
-    format: "Swiss",
-    totalRounds: 8,
-    isGrandPrix: true,
-    _count: { players: 100 }
-  },
-  {
-    id: "t7",
-    name: "Zabasajja Memorial Open",
-    description: "Grand Prix #5 (First Ugandan FM namesake). Season finale.",
-    history: "Honoring FM Zabasajja, Uganda's first FM.",
-    startDate: new Date("2025-12-15"),
-    endDate: new Date("2025-12-17"),
-    registrationDeadline: new Date("2025-12-10"),
-    registrationFee: 30000,
-    prizeFund: 2000000,
-    venue: "Kampala",
-    format: "Swiss",
-    totalRounds: 8,
-    isGrandPrix: true,
-    _count: { players: 110 }
-  },
-  {
-    id: "t8",
-    name: "African Youth Chess Championship 2026",
-    description: "Continental Event (Uganda HOST). Qualifies for World Youths.",
-    history: "Uganda hosts the continent's brightest young stars.",
-    startDate: new Date("2026-08-01"),
-    endDate: new Date("2026-08-10"),
-    registrationDeadline: new Date("2026-07-15"),
-    registrationFee: 100000,
-    prizeFund: 0,
-    venue: "Speke Resort Munyonyo",
-    format: "Swiss",
-    totalRounds: 9,
-    isGrandPrix: false,
-    _count: { players: 400 }
+    isGrandPrix: true
   },
 
-  // --- SUPPLEMENTARY RAPID & BLITZ EVENTS ---
+  // ==========================================
+  // 15. KIREKA OPEN CHESS CHAMPIONSHIP-GP
+  // ==========================================
   {
-    id: "t9",
-    name: "KTLCA Training Boost Oct 2025",
-    description: "Training event for rapid skill enhancement.",
-    startDate: new Date("2025-10-05"),
-    endDate: new Date("2025-10-05"),
+    id: "t_kireka_open_2026",
+    name: "Kireka Open Chess Championship 2026",
+    description: "Grand Prix Event #7. The annual post-Christmas chess festival hosted by Kireka Chess Club.",
+    history: "Known as the most festive and aggressively fought open of the year. Traditional season closer.",
+    startDate: new Date("2026-12-26"),
+    endDate: new Date("2026-12-30"),
+    registrationDeadline: new Date("2026-12-20"),
+    registrationFee: 35000,
+    prizeFund: 5000000,
+    venue: "Sports View Hotel, Kireka, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: true
+  },
+  {
+    id: "t_kireka_open_2025",
+    name: "Kireka Open Chess Championship 2025",
+    description: "2025 Edition of the highly anticipated Kireka post-Christmas open.",
+    history: "Attracted East Africa's top bullet and classical masters for a competitive holiday showdown.",
+    startDate: new Date("2025-12-25"),
+    endDate: new Date("2025-12-29"),
+    registrationDeadline: new Date("2025-12-20"),
+    registrationFee: 30000,
+    prizeFund: 4000000,
+    venue: "Sports View Hotel, Kireka, Kampala",
+    format: "Swiss",
+    totalRounds: 9,
+    isGrandPrix: true
+  },
+
+  // ==========================================
+  // 16. INDEPENDENCE DAY RAPID
+  // ==========================================
+  {
+    id: "t_independence_rapid_2026",
+    name: "Independence Day Rapid 2026",
+    description: "A fast-paced rapid holiday tournament celebrating Uganda's national Independence Day.",
+    history: "A single-day speed chess extravaganza drawing casual amateurs and grandmasters alike.",
+    startDate: new Date("2026-10-09"),
+    endDate: new Date("2026-10-09"),
+    registrationDeadline: new Date("2026-10-05"),
+    registrationFee: 15000,
+    prizeFund: 2000000,
+    venue: "Sheraton Hotel, Kampala",
     format: "Rapid",
     totalRounds: 7,
-    venue: "KTLCA Academy",
     isGrandPrix: false
   },
   {
-    id: "t10",
-    name: "Great Thinkers Independence Rapid",
-    description: "Independence Day Major Junior (U10-U20).",
+    id: "t_independence_rapid_2025",
+    name: "Independence Day Rapid 2025",
+    description: "2025 Edition celebrating Uganda's 63rd Independence Day anniversary through the game of chess.",
+    history: "Hosted at Kampala Parents School as a premium holiday rapid festival.",
     startDate: new Date("2025-10-09"),
     endDate: new Date("2025-10-09"),
+    registrationDeadline: new Date("2025-10-05"),
+    registrationFee: 10000,
+    prizeFund: 1500000,
+    venue: "Kampala Parents School, Kampala",
     format: "Rapid",
     totalRounds: 7,
-    venue: "Kampala Parents",
     isGrandPrix: false
   },
+
+  // ==========================================
+  // 17. ZABASAJJA MEMORIAL OPEN CHESS TOURNAMENT-GP
+  // ==========================================
   {
-    id: "t11",
-    name: "Bulemeezi Independence Rapid",
-    description: "3rd Edition regional open.",
-    startDate: new Date("2025-10-12"),
-    endDate: new Date("2025-10-12"),
-    format: "Rapid",
-    totalRounds: 7,
-    venue: "Bulemeezi",
-    isGrandPrix: false
-  },
-  {
-    id: "t12",
-    name: "MUST Chess Open 3rd Edition",
-    description: "University tournament at MUST.",
-    startDate: new Date("2025-03-15"),
-    endDate: new Date("2025-03-16"),
-    format: "Rapid",
+    id: "t_zabasajja_2026",
+    name: "Zabasajja Memorial Open Chess Tournament 2026",
+    description: "Honoring the legendary FM Willy Zabasajja, Uganda's first FIDE Master and a nine-time national champion.",
+    history: "A highly prestigious memorial event focusing on aggressive tactical play, reflecting FM Zabasajja's legendary chess style.",
+    startDate: new Date("2026-05-22"),
+    endDate: new Date("2026-05-24"),
+    registrationDeadline: new Date("2026-05-18"),
+    registrationFee: 30000,
+    prizeFund: 3000000,
+    venue: "MTN Arena, Lugogo, Kampala",
+    format: "Swiss",
     totalRounds: 8,
-    venue: "Mbarara University",
-    isGrandPrix: false
+    isGrandPrix: true
   },
   {
-    id: "t13",
-    name: "Gulu University Open Rapid 2025",
-    description: "Major Northern Uganda event.",
-    startDate: new Date("2025-04-20"),
-    endDate: new Date("2025-04-21"),
-    format: "Rapid",
-    totalRounds: 7,
-    venue: "Gulu University",
-    isGrandPrix: false
-  },
-  {
-    id: "t14",
-    name: "East Africa Junior Rapids 2025",
-    description: "Regional youth championship.",
-    startDate: new Date("2025-07-10"),
-    endDate: new Date("2025-07-11"),
-    format: "Rapid",
-    totalRounds: 9,
-    venue: "Kampala",
-    isGrandPrix: false
-  },
-  {
-    id: "t15",
-    name: "Wampewo Blitz Challenge",
-    description: "Popular club blitz challenge.",
-    startDate: new Date("2025-06-01"),
-    endDate: new Date("2025-06-01"),
-    format: "Blitz",
-    totalRounds: 11,
-    venue: "Wampewo",
-    isGrandPrix: false
-  },
-  {
-    id: "t16",
-    name: "Royal Knights Blitz Open 2025",
-    description: "Club major blitz event.",
-    startDate: new Date("2025-09-20"),
-    endDate: new Date("2025-09-20"),
-    format: "Blitz",
-    totalRounds: 13,
-    venue: "Royal Knights Club",
-    isGrandPrix: false
+    id: "t_zabasajja_2025",
+    name: "Zabasajja Memorial Open Chess Tournament 2025",
+    description: "2025 Edition honoring FM Willy Zabasajja. Crowned by IM Arthur Ssegwanyi after 8 classical rounds.",
+    history: "Hosted at Lugogo, it remains a beloved tournament defining mid-season standings for local clubs.",
+    startDate: new Date("2025-05-24"),
+    endDate: new Date("2025-05-26"),
+    registrationDeadline: new Date("2025-05-18"),
+    registrationFee: 25000,
+    prizeFund: 2500000,
+    venue: "MTN Arena, Lugogo, Kampala",
+    format: "Swiss",
+    totalRounds: 8,
+    isGrandPrix: true
   }
 ];
 
 export const MOCK_GP_POINTS = [
-  { id: "gp1", playerId: "p1", points: 10, tournamentId: "t1", tournament: { name: "Uganda National Championship", startDate: new Date("2026-06-15") } },
-  { id: "gp2", playerId: "p2", points: 8, tournamentId: "t1", tournament: { name: "Uganda National Championship", startDate: new Date("2026-06-15") } },
-  { id: "gp3", playerId: "p1", points: 10, tournamentId: "t2", tournament: { name: "K Rwabushenyi Memorial", startDate: new Date("2026-12-05") } },
-  { id: "gp4", playerId: "p2", points: 10, tournamentId: "t2", tournament: { name: "K Rwabushenyi Memorial", startDate: new Date("2026-12-05") } },
+  { id: "gp1", playerId: "p1", points: 10, tournamentId: "t_super12_2026", tournament: { name: "Super 12 National Chess Championship 2026", startDate: new Date("2026-06-15") } },
+  { id: "gp2", playerId: "p2", points: 8, tournamentId: "t_super12_2026", tournament: { name: "Super 12 National Chess Championship 2026", startDate: new Date("2026-06-15") } },
+  { id: "gp3", playerId: "p1", points: 10, tournamentId: "t_rwabushenyi_2026", tournament: { name: "Rwabushenyi Memorial Open Chess Tournament 2026", startDate: new Date("2026-12-04") } },
+  { id: "gp4", playerId: "p2", points: 10, tournamentId: "t_rwabushenyi_2026", tournament: { name: "Rwabushenyi Memorial Open Chess Tournament 2026", startDate: new Date("2026-12-04") } },
 ];
 
 export const MOCK_PAIRINGS = [
