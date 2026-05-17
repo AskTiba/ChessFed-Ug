@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import {
   MOCK_PLAYERS,
   MOCK_TOURNAMENTS,
@@ -8,10 +9,8 @@ import {
   MOCK_LEAGUE_STANDINGS,
 } from "../lib/mock-store";
 
-const adapter = new PrismaLibSql({
-  url: process.env.DATABASE_URL as string,
-});
-
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

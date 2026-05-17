@@ -1,23 +1,23 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import pc from "picocolors";
 
-const globalForPrisma = global as unknown as { prisma_v2: any };
+const globalForPrisma = global as unknown as { prisma_v2: PrismaClient };
 
-const adapter = new PrismaLibSql({
-  url: process.env.DATABASE_URL as string,
-});
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 
 export const prisma =
   globalForPrisma.prisma_v2 ||
   new PrismaClient({
+    adapter,
     log: [
       { emit: "event", level: "query" },
       { emit: "stdout", level: "error" },
       { emit: "stdout", level: "info" },
       { emit: "stdout", level: "warn" },
     ],
-    adapter,
   });
 
 // Beautiful Logging for Development
