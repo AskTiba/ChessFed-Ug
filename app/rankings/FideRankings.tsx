@@ -125,6 +125,79 @@ function formatSyncDate(dateStr: string): string {
   });
 }
 
+const SpotlightSkeleton = () => (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+    {Array.from({ length: 3 }).map((_, i) => (
+      <div
+        key={i}
+        className="relative p-8 rounded-[2.5rem] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden shadow-sm"
+      >
+        <div className="animate-pulse space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-4 w-20 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+            <div className="h-3 w-10 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+          </div>
+          <div className="h-8 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
+          <div className="h-10 w-24 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
+          <div className="flex gap-2 mt-4">
+            <div className="h-3 w-12 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+            <div className="h-3 w-12 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+          </div>
+          <div className="h-3 w-32 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const TableSkeleton = () => (
+  <div className="bg-white dark:bg-zinc-900 rounded-[3rem] border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-sm">
+    <div className="overflow-x-auto">
+      <table className="w-full text-left">
+        <thead>
+          <tr className="bg-zinc-50 dark:bg-zinc-800/50 border-b border-zinc-100 dark:border-zinc-800">
+            <th className="px-6 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest w-20">Rank</th>
+            <th className="px-6 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest">Player</th>
+            <th className="px-6 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest hidden sm:table-cell w-32">FIDE ID</th>
+            <th className="px-6 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest text-right w-28">Standard</th>
+            <th className="px-6 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest text-right hidden md:table-cell w-28">Rapid</th>
+            <th className="px-6 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest text-right hidden md:table-cell w-28">Blitz</th>
+            <th className="px-6 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest text-right hidden lg:table-cell w-24">Born</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <tr key={idx} className="animate-pulse">
+              <td className="px-6 py-5">
+                <div className="h-4 w-8 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+              </td>
+              <td className="px-6 py-5">
+                <div className="h-5 w-48 bg-zinc-200 dark:bg-zinc-800 rounded-lg mb-2" />
+                <div className="h-3 w-20 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+              </td>
+              <td className="px-6 py-5 hidden sm:table-cell">
+                <div className="h-4 w-16 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+              </td>
+              <td className="px-6 py-5 text-right">
+                <div className="h-6 w-12 bg-zinc-200 dark:bg-zinc-800 rounded-lg ml-auto" />
+              </td>
+              <td className="px-6 py-5 text-right hidden md:table-cell">
+                <div className="h-5 w-10 bg-zinc-200 dark:bg-zinc-800 rounded-lg ml-auto" />
+              </td>
+              <td className="px-6 py-5 text-right hidden md:table-cell">
+                <div className="h-5 w-10 bg-zinc-200 dark:bg-zinc-800 rounded-lg ml-auto" />
+              </td>
+              <td className="px-6 py-5 text-right hidden lg:table-cell">
+                <div className="h-4 w-8 bg-zinc-200 dark:bg-zinc-800 rounded-full ml-auto" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function FideRankings() {
@@ -302,9 +375,9 @@ export default function FideRankings() {
 
       {/* ─── Content ───────────────────────────────────────────────────── */}
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center p-20 text-zinc-500 font-bold italic">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          Retrieving Official FIDE Rankings...
+        <div className="space-y-8">
+          {submittedQuery === "" && <SpotlightSkeleton />}
+          <TableSkeleton />
         </div>
       ) : players.length === 0 ? (
         <div className="bg-white dark:bg-zinc-900 rounded-[3rem] border border-zinc-200 dark:border-zinc-800 p-20 text-center text-zinc-500 font-medium italic">
@@ -313,7 +386,13 @@ export default function FideRankings() {
             : "No ranking data available. An admin needs to trigger a FIDE sync."}
         </div>
       ) : (
-        <>
+        <div className={`relative transition-all duration-300 ${isFetching ? "opacity-50 blur-[0.5px] pointer-events-none" : "opacity-100 blur-0"}`}>
+          {isFetching && (
+            <div className="absolute -top-4 left-0 right-0 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden z-20">
+              <div className="h-full w-1/3 bg-blue-600 dark:bg-blue-500 rounded-full animate-loading-bar" />
+            </div>
+          )}
+
           {/* ─── Top 3 Spotlight Cards ─────────────────────────────────── */}
           {submittedQuery === "" && players.length >= 3 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -511,7 +590,7 @@ export default function FideRankings() {
               </table>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
