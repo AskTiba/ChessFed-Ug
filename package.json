@@ -18,6 +18,7 @@
     "@supabase/supabase-js": "^2.98.0",
     "@tanstack/react-query": "^5.90.21",
     "bcryptjs": "^3.0.3",
+    "fast-xml-parser": "^5.8.0",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "pg": "^8.20.0",
@@ -26,6 +27,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.2",
+    "sax": "^1.6.0",
     "socket.io-client": "^4.8.3",
     "zod": "^4.3.6"
   },
@@ -37,6 +39,7 @@
     "@types/pg": "^8.18.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sax": "^1.2.7",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",

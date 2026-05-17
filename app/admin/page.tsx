@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import FideSyncPanel from "./FideSyncPanel";
 
 export default async function AdminDashboardPage() {
   const playerCount = await prisma.player.count();
@@ -104,6 +105,9 @@ export default async function AdminDashboardPage() {
 
           {/* Quick Shortcuts */}
           <div className="space-y-8">
+            {/* FIDE Data Sync Panel */}
+            <FideSyncPanel />
+
             <section className="p-8 bg-zinc-900 text-white rounded-[2.5rem]">
               <h3 className="text-sm font-black uppercase tracking-widest mb-6 text-blue-400">Quick Operations</h3>
               <div className="space-y-4">

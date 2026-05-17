@@ -222,3 +222,38 @@ model Pairing {
   tournamentId String
   tournament   Tournament @relation(fields: [tournamentId], references: [id])
 }
+
+// ─── FIDE OFFICIAL RANKINGS DATA ─────────────────────────────────────────────
+// Self-hosted copy of FIDE's monthly bulk download, filtered by country.
+// Canonical source: https://ratings.fide.com/download/players_list_xml.zip
+
+model FidePlayer {
+  fideId      Int      @id
+  name        String
+  country     String
+  sex         String?
+  title       String?  // GM, IM, FM, WGM, WIM, WFM, CM, WCM
+  rating      Int      @default(0) // Standard ELO
+  games       Int      @default(0) // Games in rating period
+  kFactor     Int      @default(0)
+  rapidRating Int      @default(0)
+  rapidGames  Int      @default(0)
+  blitzRating Int      @default(0)
+  blitzGames  Int      @default(0)
+  birthday    Int?     // Birth year
+  flag        String?  // "i" = inactive, "w" = woman-title only, null = active
+  syncedAt    DateTime @default(now()) // When this record was last synced from FIDE
+
+  @@index([country])
+  @@index([rating])
+  @@index([country, rating])
+}
+
+model FideSyncLog {
+  id        String   @id @default(cuid())
+  syncedAt  DateTime @default(now())
+  period    String   // e.g. "May 2026"
+  totalRows Int      // Total players synced for the country
+  status    String   // "SUCCESS" | "FAILED"
+  error     String?
+}
