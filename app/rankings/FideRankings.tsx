@@ -11,6 +11,7 @@ interface FidePlayer {
   fideId: number;
   name: string;
   country: string;
+  nationalRank?: number | null;
   sex: string | null;
   title: string | null;
   rating: number;
@@ -65,6 +66,7 @@ async function fetchRankings(
         fideId: data.id,
         name: data.name,
         country: data.federation,
+        nationalRank: null, // Global searches don't get a Ugandan rank
         sex: data.gender || null,
         title: data.title || null,
         rating: data.standard || 0,
@@ -274,16 +276,28 @@ export default function FideRankings() {
           ))}
         </div>
 
-        <button
-          onClick={() => setActiveOnly(!activeOnly)}
-          className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border transition-all ${
-            activeOnly
-              ? "bg-green-600 text-white border-green-600"
-              : "bg-transparent text-zinc-500 border-zinc-200 dark:border-zinc-800 hover:border-green-500 hover:text-green-500"
-          }`}
-        >
-          {activeOnly ? "✓ Active Only" : "All Players"}
-        </button>
+        <div className="inline-flex bg-zinc-100 dark:bg-zinc-900 rounded-2xl p-1.5 border border-zinc-200 dark:border-zinc-800">
+          <button
+            onClick={() => setActiveOnly(false)}
+            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+              !activeOnly
+                ? "bg-zinc-800 dark:bg-zinc-700 text-white shadow-lg"
+                : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+            }`}
+          >
+            All Players
+          </button>
+          <button
+            onClick={() => setActiveOnly(true)}
+            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+              activeOnly
+                ? "bg-green-600 text-white shadow-lg"
+                : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+            }`}
+          >
+            Active Only
+          </button>
+        </div>
       </div>
 
       {/* ─── Content ───────────────────────────────────────────────────── */}
@@ -422,7 +436,7 @@ export default function FideRankings() {
                     >
                       <td className="px-6 py-5">
                         <span className="text-zinc-400 font-bold tabular-nums">
-                          {submittedQuery === "" ? `#${index + 1}` : "-"}
+                          {player.nationalRank ? `#${player.nationalRank}` : "-"}
                         </span>
                       </td>
                       <td className="px-6 py-5">

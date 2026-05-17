@@ -68,9 +68,36 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
+    // ─── Compute National Rank ───────────────────────────────────────
+    let rankedPlayers = players;
+    if (query) {
+      rankedPlayers = await Promise.all(
+        players.map(async (p) => {
+          const rankWhere: any = { country };
+          if (activeOnly) rankWhere.flag = null;
+
+          if (sort === "rapid") {
+            rankWhere.rapidRating = { gt: p.rapidRating };
+          } else if (sort === "blitz") {
+            rankWhere.blitzRating = { gt: p.blitzRating };
+          } else {
+            rankWhere.rating = { gt: p.rating };
+          }
+
+          const higherRatedCount = await prisma.fidePlayer.count({
+            where: rankWhere,
+          });
+
+          return { ...p, nationalRank: higherRatedCount + 1 };
+        })
+      );
+    } else {
+      rankedPlayers = players.map((p, idx) => ({ ...p, nationalRank: idx + 1 }));
+    }
+
     // ─── Response ────────────────────────────────────────────────────
     const response = NextResponse.json({
-      players,
+      players: rankedPlayers,
       meta: {
         count: players.length,
         country,
@@ -85,11 +112,18 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Cache for 1 hour (FIDE data updates monthly, so this is very safe)
-    response.headers.set(
-      "Cache-Control",
-      "public, s-maxage=3600, stale-while-revalidate=86400"
-    );
+    // Cache for 1 hour in production, disable cache in development
+    if (process.env.NODE_ENV === "production") {
+      response.headers.set(
+        "Cache-Control",
+        "public, s-maxage=3600, stale-while-revalidate=86400"
+      );
+    } else {
+      response.headers.set(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, proxy-revalidate"
+      );
+    }
 
     return response;
   } catch (error) {
