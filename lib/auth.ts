@@ -5,53 +5,60 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+const providers: any[] = [
+  CredentialsProvider({
+    name: "Credentials",
+    credentials: {
+      email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
+      password: { label: "Password", type: "password" },
+    },
+    async authorize(credentials) {
+      if (!credentials?.email || !credentials?.password) {
+        throw new Error("Missing credentials");
+      }
+      
+      const user = await prisma.user.findUnique({
+        where: { email: credentials.email },
+      });
+
+      if (!user || !user.password) {
+        throw new Error("Invalid credentials");
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(
+        credentials.password,
+        user.password
+      );
+
+      if (!isPasswordCorrect) {
+        throw new Error("Invalid credentials");
+      }
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      };
+    },
+  }),
+];
+
+if (process.env.GITHUB_ID && process.env.GITHUB_SECRET) {
+  providers.push(
+    GithubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    })
+  );
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
-  providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing credentials");
-        }
-        
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-
-        if (!user || !user.password) {
-          throw new Error("Invalid credentials");
-        }
-
-        const isPasswordCorrect = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isPasswordCorrect) {
-          throw new Error("Invalid credentials");
-        }
-
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        };
-      },
-    }),
-  ],
+  providers,
   pages: {
     signIn: "/login",
     newUser: "/register",
