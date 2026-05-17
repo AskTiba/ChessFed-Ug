@@ -1,29 +1,39 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 
 type TabView = "details" | "standings" | "roster" | "pairings";
 
-import { Suspense } from "react";
+interface FedTournament {
+  id: string;
+  name: string;
+}
 
 function ChessResultsLiveFeed() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Search parameters & states
+  // URL Query Sync
   const initialId = searchParams.get("id") || "";
   const [inputId, setInputId] = useState(initialId);
   const [activeId, setActiveId] = useState(initialId);
+
+  // View & Round Controllers
   const [activeTab, setActiveTab] = useState<TabView>("standings");
   const [activeRound, setActiveRound] = useState(1);
 
-  // Data States
+  // Roster/Standings/Pairings loading states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Tournament details state
+
+  // Federation Index List states
+  const [fedTournaments, setFedTournaments] = useState<FedTournament[] | null>(null);
+  const [searchFilter, setSearchFilter] = useState("");
+  const [listLoading, setListLoading] = useState(false);
+
+  // Details parsed for current tournament
   const [details, setDetails] = useState<{
     name: string;
     organizer: string | null;
@@ -35,23 +45,36 @@ function ChessResultsLiveFeed() {
   // Tab contents state
   const [tabData, setTabData] = useState<any>(null);
 
-  // Recommended Chess-Results IDs for testing
-  const featuredTournaments = [
-    { id: "1015694", name: "FIDE World Cup 2026 Sandbox" },
-    { id: "1012356", name: "Uganda National Juniors 2026" },
-    { id: "986754", name: "Central Uganda Open GP" },
-  ];
-
-  // Sync state with URL
+  // Initial Sync from URL parameter
   useEffect(() => {
     setInputId(initialId);
     setActiveId(initialId);
     if (initialId) {
       fetchDetails(initialId);
+    } else {
+      fetchFederationList();
     }
   }, [initialId]);
 
-  // Handle Fetching Tournament Details
+  // Fetch Uganda Registered Tournaments Index from Chess-Results
+  const fetchFederationList = async () => {
+    setListLoading(true);
+    setError(null);
+    setDetails(null);
+    setTabData(null);
+    try {
+      const res = await fetch("/api/external/chess-results?view=list");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to load Uganda tournaments list");
+      setFedTournaments(json.data);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setListLoading(false);
+    }
+  };
+
+  // Fetch Core Details for active ID
   const fetchDetails = async (id: string) => {
     setLoading(true);
     setError(null);
@@ -64,7 +87,7 @@ function ChessResultsLiveFeed() {
       if (!res.ok) throw new Error(json.error || "Failed to load tournament details");
 
       setDetails(json.data);
-      // Fetch initial standings automatically once details succeed
+      // Automatically default to showing current standings
       fetchViewData(id, "standings");
     } catch (err) {
       setError((err as Error).message);
@@ -73,7 +96,7 @@ function ChessResultsLiveFeed() {
     }
   };
 
-  // Handle Fetching specific tab content
+  // Fetch Tab Specific details (standings, roster, pairings)
   const fetchViewData = async (id: string, view: TabView, roundNum?: number) => {
     setLoading(true);
     setError(null);
@@ -97,12 +120,25 @@ function ChessResultsLiveFeed() {
     e.preventDefault();
     const cleanId = inputId.trim();
     if (!cleanId || !/^\d+$/.test(cleanId)) {
-      setError("Please enter a valid numeric Tournament ID.");
+      setError("Please enter a valid numeric Chess-Results Tournament ID.");
       return;
     }
+    triggerTournamentView(cleanId);
+  };
 
+  const triggerTournamentView = (id: string) => {
     const params = new URLSearchParams(window.location.search);
-    params.set("id", cleanId);
+    params.set("id", id);
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleBackToList = () => {
+    setInputId("");
+    setActiveId("");
+    setDetails(null);
+    setTabData(null);
+    const params = new URLSearchParams(window.location.search);
+    params.delete("id");
     router.push(`?${params.toString()}`);
   };
 
@@ -120,9 +156,14 @@ function ChessResultsLiveFeed() {
     }
   };
 
+  // Filter list by name keyword
+  const filteredList = (fedTournaments || []).filter((t) =>
+    t.name.toLowerCase().includes(searchFilter.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-zinc-950 font-sans pb-24 text-white pt-24">
-      {/* Dynamic Nav Header */}
+      {/* Navigation Header */}
       <nav className="fixed top-0 w-full z-50 bg-zinc-900 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
@@ -136,7 +177,7 @@ function ChessResultsLiveFeed() {
             </div>
             <div className="flex items-center gap-6">
               <Link href="/tournaments" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">
-                Back to Calendar
+                Calendar
               </Link>
             </div>
           </div>
@@ -153,89 +194,188 @@ function ChessResultsLiveFeed() {
           </p>
         </header>
 
-        {/* Input Form Search Console */}
-        <div className="max-w-2xl mx-auto mb-16 space-y-6">
-          <form onSubmit={handleSearchSubmit} className="relative group">
-            <input
-              type="text"
-              value={inputId}
-              onChange={(e) => setInputId(e.target.value)}
-              placeholder="Paste Chess-Results Tournament ID (e.g. 1015694)..."
-              className="w-full px-8 py-6 bg-zinc-900 border border-zinc-800 rounded-[2.5rem] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold shadow-2xl text-center placeholder-zinc-600"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="absolute right-4 top-1/2 -translate-y-1/2 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white text-xs font-black uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:scale-105"
-            >
-              {loading ? "FETCHING..." : "CONNECT LIVE"}
-            </button>
-          </form>
-
-          {/* Quick Select Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mr-2">Featured:</span>
-            {featuredTournaments.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => {
-                  setInputId(t.id);
-                  const params = new URLSearchParams(window.location.search);
-                  params.set("id", t.id);
-                  router.push(`?${params.toString()}`);
-                }}
-                className="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs font-bold text-zinc-400 hover:text-white transition-all"
-              >
-                {t.name} (ID: {t.id})
-              </button>
-            ))}
-          </div>
-        </div>
-
         {error && (
-          <div className="max-w-2xl mx-auto p-8 bg-red-950/20 border border-red-900/40 rounded-[2.5rem] text-center text-red-400">
+          <div className="max-w-3xl mx-auto p-8 bg-red-950/20 border border-red-900/40 rounded-[2.5rem] text-center text-red-400 mb-12">
             <p className="font-bold mb-2">Failed to Connect Live Feed</p>
             <p className="text-xs">{error}</p>
-            <p className="text-[10px] text-red-500 font-bold mt-4 uppercase">
-              Tip: Confirm the ID is active on Chess-Results and that your internet is connected.
-            </p>
           </div>
         )}
 
-        {/* Dynamic Display Console */}
-        {details && (
+        {/* ─── CASE A: NO TOURNAMENT SELECTED - RENDER SEARCHABLE INDEX ─── */}
+        {!activeId && (
+          <div className="space-y-12 animate-fade-in">
+            {/* Search and ID Connect Bar */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              {/* ID Input Form */}
+              <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-[2.5rem] space-y-4">
+                <h3 className="font-black text-sm uppercase tracking-wider text-blue-400">
+                  Connect by Chess-Results ID
+                </h3>
+                <form onSubmit={handleSearchSubmit} className="relative">
+                  <input
+                    type="text"
+                    value={inputId}
+                    onChange={(e) => setInputId(e.target.value)}
+                    placeholder="Enter ID (e.g. 1380546)..."
+                    className="w-full px-6 py-4 bg-zinc-950 border border-zinc-800 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-white pr-28 text-sm"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
+                  >
+                    GO ⚡
+                  </button>
+                </form>
+                <p className="text-[10px] text-zinc-500 font-bold leading-relaxed uppercase">
+                  Paste the numeric ID from any Chess-Results tournament URL (e.g. tnr1380546.aspx $\rightarrow$ ID is 1380546)
+                </p>
+              </div>
+
+              {/* Text Search Filter */}
+              <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-[2.5rem] space-y-4">
+                <h3 className="font-black text-sm uppercase tracking-wider text-emerald-400">
+                  Filter Uganda Tournaments
+                </h3>
+                <input
+                  type="text"
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                  placeholder="Type name (e.g. 'Makerere', 'Elevation', 'Youth')..."
+                  className="w-full px-6 py-4 bg-zinc-950 border border-zinc-800 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-bold text-white text-sm"
+                />
+                <p className="text-[10px] text-zinc-500 font-bold leading-relaxed uppercase">
+                  Instantly searches matches across active tournament registries
+                </p>
+              </div>
+            </div>
+
+            {/* Federation tournaments list grid */}
+            <div className="bg-zinc-900 border border-zinc-800 rounded-[2.5rem] p-8 space-y-6">
+              <div className="flex justify-between items-center border-b border-zinc-800 pb-6">
+                <div>
+                  <h2 className="text-xl font-black italic uppercase tracking-tighter text-white">
+                    Uganda Federation Registries
+                  </h2>
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                    Active Tournaments on Chess-Results Server for 2026
+                  </p>
+                </div>
+
+                <button
+                  onClick={fetchFederationList}
+                  disabled={listLoading}
+                  className="px-4 py-2 bg-zinc-850 hover:bg-zinc-800 border border-zinc-700 rounded-xl text-xs font-bold text-zinc-300 transition-all flex items-center gap-2"
+                >
+                  {listLoading ? (
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                  ) : (
+                    "🔄 Refresh Index"
+                  )}
+                </button>
+              </div>
+
+              {listLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-12">
+                  {Array.from({ length: 6 }).map((_, idx) => (
+                    <div key={idx} className="h-28 bg-zinc-950 rounded-3xl border border-zinc-800 animate-pulse p-6 space-y-4">
+                      <div className="h-4 bg-zinc-800 rounded w-3/4"></div>
+                      <div className="h-3 bg-zinc-800 rounded w-1/4"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : filteredList.length === 0 ? (
+                <div className="p-20 border border-dashed border-zinc-800 rounded-[2rem] text-center text-zinc-500 font-bold italic">
+                  No tournaments found matching &quot;{searchFilter}&quot;.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[600px] overflow-y-auto pr-2">
+                  {filteredList.map((t) => (
+                    <div
+                      key={t.id}
+                      onClick={() => triggerTournamentView(t.id)}
+                      className="group p-6 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 hover:bg-white/[0.02] rounded-3xl cursor-pointer transition-all flex flex-col justify-between gap-4 shadow-xl hover:shadow-2xl"
+                    >
+                      <div>
+                        {/* Dynamic Live Tag if name contains 2026 or similar */}
+                        <div className="flex justify-between items-start gap-4 mb-2">
+                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-500 text-[8px] font-black uppercase tracking-widest">
+                            ID: {t.id}
+                          </span>
+                          {t.name.toLowerCase().includes("championship") && (
+                            <span className="px-2.5 py-0.5 rounded-full bg-red-600/10 text-red-500 text-[8px] font-black uppercase tracking-widest border border-red-500/20 animate-pulse">
+                              LIVE EVENT
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="font-bold text-white group-hover:text-blue-400 transition-colors text-sm line-clamp-2 leading-relaxed uppercase">
+                          {t.name}
+                        </h3>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-2 border-t border-zinc-900">
+                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">
+                          CHESS-RESULTS UGA
+                        </span>
+                        <span className="text-xs font-black text-blue-500 group-hover:translate-x-1 transition-transform">
+                          VIEW DATA ⚡
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ─── CASE B: ACTIVE TOURNAMENT VIEW - PARSE DETAILS, STANDINGS, ROSTERS ─── */}
+        {activeId && details && (
           <div className="space-y-8 animate-fade-in">
-            {/* Tournament Details Header Card */}
+            {/* Header / Back Action Bar */}
+            <div className="flex justify-between items-center">
+              <button
+                onClick={handleBackToList}
+                className="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 rounded-full text-xs font-black uppercase tracking-widest text-zinc-300 transition-all flex items-center gap-2 hover:scale-105"
+              >
+                ← Return to Uganda List
+              </button>
+
+              <span className="text-xs font-mono text-zinc-500 font-bold uppercase">
+                Active ID: {activeId}
+              </span>
+            </div>
+
+            {/* Tournament Details Banner Card */}
             <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-[2.5rem] relative overflow-hidden">
-              {/* Dynamic Glow Line */}
-              <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-red-600 via-yellow-500 to-green-600"></div>
+              <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-blue-600 via-yellow-500 to-green-600"></div>
 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
                   <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest mb-4">
-                    ⚡ Live Connection Verified
+                    ⚡ Real-Time DOM Resolve Active
                   </span>
-                  <h2 className="text-3xl font-black italic tracking-tighter text-white uppercase leading-none mb-4">
+                  <h2 className="text-2xl sm:text-3xl font-black italic tracking-tighter text-white uppercase leading-tight mb-4 max-w-2xl">
                     {details.name}
                   </h2>
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-zinc-500 font-bold uppercase tracking-widest">
-                    <span>📍 Venue: {details.location || "TBD"}</span>
-                    <span>👤 Organizer: {details.organizer || "TBD"}</span>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                    <span>📍 Venue: {details.location || "Uganda"}</span>
+                    <span>👤 Organizer: {details.organizer || "UCF Arbiter Team"}</span>
+                    {details.chiefArbiter && <span>👤 Arbiter: {details.chiefArbiter}</span>}
                   </div>
                 </div>
 
-                <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800/80 min-w-[150px] text-center">
-                  <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Rounds Scheduled</p>
+                <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800/80 min-w-[140px] text-center">
+                  <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Total Rounds</p>
                   <p className="text-2xl font-black italic text-blue-400">{details.rounds}</p>
                 </div>
               </div>
             </div>
 
-            {/* Dynamic View Selector Tab Bar */}
+            {/* Tab Pill Selector */}
             <div className="flex flex-wrap border-b border-zinc-800 bg-zinc-900/50 p-4 rounded-[2rem] gap-2">
               {[
-                { key: "standings", label: "Standings Ranks" },
-                { key: "roster", label: "Player Roster" },
+                { key: "standings", label: "Standings & Tiebreaks" },
+                { key: "roster", label: "Federation Roster" },
                 { key: "pairings", label: "Round Pairings" }
               ].map((tab) => (
                 <button
@@ -268,16 +408,16 @@ function ChessResultsLiveFeed() {
               </div>
             )}
 
-            {/* Dynamic Rendering Tables */}
+            {/* Table Display */}
             <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-[2.5rem] overflow-hidden min-h-[300px]">
               {loading ? (
                 <div className="flex flex-col items-center justify-center p-20 font-bold italic text-zinc-500 gap-4">
                   <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
-                  Dynamic DOM Parser running...
+                  Parsing Chess-Results Data Matrix...
                 </div>
               ) : !tabData || tabData.length === 0 ? (
                 <div className="flex flex-col items-center justify-center p-20 font-bold italic text-zinc-500">
-                  No data populated for this view yet. Standard pairings might not be uploaded.
+                  No data parsed for this view yet. Standard standings/pairings might not be uploaded.
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -289,7 +429,9 @@ function ChessResultsLiveFeed() {
                           <th className="pb-4">Rank</th>
                           <th className="pb-4">Player Name</th>
                           <th className="pb-4">FED</th>
-                          <th className="pb-4 text-center">Standard Rating</th>
+                          <th className="pb-4 text-center">Rating</th>
+                          {tabData[0]?.tiebreak1 !== undefined && <th className="pb-4 text-center">TB 1</th>}
+                          {tabData[0]?.tiebreak2 !== undefined && <th className="pb-4 text-center">TB 2</th>}
                           <th className="pb-4 text-right">Points</th>
                         </tr>
                       </thead>
@@ -303,6 +445,8 @@ function ChessResultsLiveFeed() {
                             </td>
                             <td className="py-4 text-xs font-bold text-zinc-400">{p.federation}</td>
                             <td className="py-4 text-center font-mono text-zinc-300 text-sm">{p.rating}</td>
+                            {p.tiebreak1 !== undefined && <td className="py-4 text-center font-mono text-zinc-400 text-xs">{p.tiebreak1}</td>}
+                            {p.tiebreak2 !== undefined && <td className="py-4 text-center font-mono text-zinc-400 text-xs">{p.tiebreak2}</td>}
                             <td className="py-4 text-right font-black text-white italic text-lg">{p.points.toFixed(1)}</td>
                           </tr>
                         ))}
@@ -317,7 +461,7 @@ function ChessResultsLiveFeed() {
                         <tr className="border-b border-zinc-800 text-[10px] font-black text-zinc-500 uppercase tracking-widest">
                           <th className="pb-4">SNo.</th>
                           <th className="pb-4">Player Name</th>
-                          <th className="pb-4">FIDE Title</th>
+                          <th className="pb-4">Title</th>
                           <th className="pb-4">FED</th>
                           <th className="pb-4 text-right">Rating</th>
                         </tr>

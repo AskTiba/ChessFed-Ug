@@ -4,6 +4,7 @@ import {
   scrapeStandings,
   scrapeRoster,
   scrapePairings,
+  scrapeUGAFederationTournaments,
 } from "@/lib/scrapers/chessResults";
 
 export const dynamic = "force-dynamic";
@@ -16,14 +17,23 @@ export async function GET(request: NextRequest) {
     const roundStr = searchParams.get("rd")?.trim() || "1";
     const round = parseInt(roundStr, 10) || 1;
 
+    let data: any;
+
+    if (view === "list") {
+      data = await scrapeUGAFederationTournaments();
+      return NextResponse.json({
+        success: true,
+        view,
+        data,
+      });
+    }
+
     if (!tournamentId || !/^\d+$/.test(tournamentId)) {
       return NextResponse.json(
         { error: "A valid numeric Chess-Results Tournament ID (e.g. 1015694) is required." },
         { status: 400 }
       );
     }
-
-    let data: any;
 
     switch (view) {
       case "standings":
