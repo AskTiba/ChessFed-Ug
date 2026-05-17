@@ -22,7 +22,7 @@ export const prisma =
 
 // Beautiful Logging for Development
 if (process.env.NODE_ENV !== "production") {
-  prisma.$on("query", (e: any) => {
+  (prisma as any).$on("query", (e: any) => {
     // ... same logging code ...
   });
   
