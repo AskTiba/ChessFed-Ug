@@ -53,13 +53,14 @@ The platform features a modern, eye-soothing dark aesthetic (`Zinc-950`) that ha
 
 ## 🛠️ Tech Stack
 
-*   **Framework:** Next.js 15 (App Router)
+*   **Framework:** Next.js 16 (App Router with Turbopack)
 *   **Language:** TypeScript
 *   **Styling:** Tailwind CSS v4 (Modern High-Fidelity)
-*   **ORM:** Prisma (PostgreSQL support)
+*   **ORM:** Prisma (PostgreSQL support, pooled serverless adapter wrapper)
+*   **Database:** Live Supabase PostgreSQL database
+*   **FIDE Synchronization:** Custom streaming SAX parser for direct monthly FIDE rating updates
 *   **Authentication:** NextAuth.js
 *   **Forms:** React Hook Form + Resolver Zod
-*   **Database Simulation:** High-fidelity mock store for functional "Demo Mode" without a live DB.
 
 ---
 
@@ -82,9 +83,11 @@ The platform features a modern, eye-soothing dark aesthetic (`Zinc-950`) that ha
    npm install
    ```
 
-3. **Generate Prisma Client:**
+3. **Database Setup:**
+   Configure your Supabase connection strings inside `.env` and `prisma.config.ts`, then run:
    ```bash
-   npx prisma generate
+   npx prisma db push
+   npx prisma db seed
    ```
 
 4. **Run the development server:**
@@ -97,19 +100,20 @@ Open [http://localhost:3000](http://localhost:3000) to see the platform in actio
 ---
 
 ## 🗺️ Navigation & Access
-The MVP is fully browsable. Some specific routes for testing:
+The platform is fully functional. Some specific routes for testing:
 *   **Main Hub:** `/`
 *   **Leaderboards:** `/grand-prix` | `/rankings`
-*   **Admin Access:** `/admin` (Simulation Mode)
-*   **Member Portal:** `/dashboard` (Login as `anthony@example.com`)
+*   **Admin Access:** `/admin` (Manage manual syncs and tournament parameters)
+*   **Member Portal:** `/dashboard` (Login as `admin@chessfed.ug` / `password123`)
 
 ---
 
 ## 📝 Status & Roadmap
 *   [x] **Phase 1:** Public Awareness Hub (Calendar, Rankings, Portals)
 *   [x] **Phase 2:** Functional Simulation MVP (Server Actions, Mock Store)
-*   [x] **Phase 3:** High-Fidelity UI/UX Polish (National Pride Theme)
-*   [ ] **Phase 4:** Live Production Backend (PostgreSQL & Socket.io Live Games)
+*   [x] **Phase 3:** High-Fidelity UI/UX Polish (National Pride Theme & Sleek Skeleton loaders)
+*   [x] **Phase 4:** Live Production Backend (Supabase PostgreSQL, Prisma Client connection pooling, FIDE bulk data sync)
+*   [ ] **Phase 5:** Socket.io Live Games & Real-time Live Pairings
 
 ---
 
