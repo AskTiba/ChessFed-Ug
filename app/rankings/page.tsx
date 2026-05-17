@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     "Official FIDE ELO ratings for Ugandan chess players. Standard, Rapid, and Blitz rankings synced from the official FIDE database.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function NationalRankingsPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans pb-20">

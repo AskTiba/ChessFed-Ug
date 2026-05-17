@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import ClubListClient from "./ClubListClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function ClubsPage() {
   const clubs = await prisma.club.findMany({
     orderBy: { name: 'asc' }

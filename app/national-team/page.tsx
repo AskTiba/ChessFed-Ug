@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import YearSelector from "@/components/YearSelector";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 async function NationalTeamContent({ searchParams }: { searchParams: { year?: string } }) {
   const year = searchParams.year || "2026";
   const players = await prisma.player.findMany({

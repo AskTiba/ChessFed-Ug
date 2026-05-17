@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import FideSyncPanel from "./FideSyncPanel";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardPage() {
   const playerCount = await prisma.player.count();
   const clubs = await prisma.club.findMany();
