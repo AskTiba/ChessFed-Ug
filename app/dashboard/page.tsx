@@ -89,6 +89,12 @@ export default async function PlayerDashboardPage() {
               <div className="p-8 bg-white dark:bg-zinc-900 rounded-[3rem] border border-zinc-200 dark:border-zinc-800 shadow-xl shadow-zinc-200/50">
                 <h3 className="font-black text-zinc-900 dark:text-white uppercase tracking-tighter mb-6 italic text-lg">Member Portal</h3>
                 <div className="space-y-4">
+                  {(user?.role === "ADMIN" || user?.role === "OFFICIAL") && (
+                    <Link href="/admin" className="flex items-center justify-between p-4 rounded-2xl bg-blue-600 text-white hover:bg-blue-700 transition-colors group shadow-lg shadow-blue-500/20">
+                      <span className="font-black text-sm tracking-wide">⚡ Federation Admin Console</span>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </Link>
+                  )}
                   <Link href="/profile/edit" className="flex items-center justify-between p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group">
                     <span className="font-bold text-sm text-zinc-600 dark:text-zinc-400 group-hover:text-blue-600 transition-colors">Edit My Profile</span>
                     <span className="text-zinc-400 group-hover:text-blue-600">→</span>

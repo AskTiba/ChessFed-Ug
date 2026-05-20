@@ -145,10 +145,11 @@ model LeagueStanding {
 model Tournament {
   id                   String           @id @default(cuid())
   name                 String
+  crId                 String?          @unique // External Chess-Results ID
   description          String?
   history              String?
   startDate            DateTime
-  endDate            DateTime
+  endDate              DateTime
   registrationDeadline DateTime?
   registrationFee      Float?
   prizeFund            Float?
@@ -163,6 +164,21 @@ model Tournament {
   scores               Score[]
   pairings             Pairing[]
   grandPrixPoints      GrandPrixPoint[]
+  liveData             TournamentLiveData?
+}
+
+model TournamentLiveData {
+  id              String      @id @default(cuid())
+  tournamentId    String      @unique
+  tournament      Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  
+  // Scraped Data Stored as JSON for maximum speed
+  details         Json?
+  standings       Json?
+  pairings        Json?
+  roster          Json?
+  
+  lastSyncedAt    DateTime    @default(now())
 }
 
 model GrandPrixPoint {

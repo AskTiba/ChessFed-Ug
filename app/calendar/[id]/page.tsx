@@ -27,7 +27,7 @@ export default async function TournamentDetailPage(props: { params: Promise<{ id
       <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link href="/tournaments" className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-blue-600 transition-colors">
+            <Link href="/calendar" className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-blue-600 transition-colors">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
               Back to Calendar
             </Link>
@@ -78,7 +78,7 @@ export default async function TournamentDetailPage(props: { params: Promise<{ id
                 <span className="text-5xl font-black text-zinc-900 dark:text-white">{(tournament.registrationFee || 0).toLocaleString()}</span>
               </div>
               {isRegistrationOpen ? (
-                <Link href={`/tournaments/${tournament.id}/register`} className="block w-full text-center py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all hover:scale-105 shadow-lg shadow-blue-500/25">
+                <Link href={`/calendar/${tournament.id}/register`} className="block w-full text-center py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all hover:scale-105 shadow-lg shadow-blue-500/25">
                   Secure Your Seat
                 </Link>
               ) : (
@@ -223,7 +223,7 @@ export default async function TournamentDetailPage(props: { params: Promise<{ id
                 <span className="text-blue-200 font-bold">Players Registered</span>
               </div>
               <div className="mt-6 pt-6 border-t border-blue-500/50 space-y-4">
-                <Link href={`/tournaments/${tournament.id}/live`} className="flex items-center justify-center gap-2 w-full py-3 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-sm transition-all shadow-lg">
+                <Link href={`/calendar/${tournament.id}/live`} className="flex items-center justify-center gap-2 w-full py-3 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-sm transition-all shadow-lg">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>

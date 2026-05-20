@@ -57,8 +57,8 @@ export async function registerForTournamentAction(tournamentId: string, playerId
       }
     });
 
-    revalidatePath(`/tournaments/${tournamentId}`);
-    revalidatePath(`/tournaments/${tournamentId}/register`);
+    revalidatePath(`/calendar/${tournamentId}`);
+    revalidatePath(`/calendar/${tournamentId}/register`);
     revalidatePath("/dashboard");
     
     return { success: true };

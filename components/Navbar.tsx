@@ -22,10 +22,10 @@ export default function Navbar() {
   if (isAuthPage || isAdminPage) return null;
 
   const navLinks = [
-    { href: "/tournaments", label: "Calendar" },
+    { href: "/calendar", label: "Calendar" },
+    { href: "/tournaments", label: "Tournaments" },
     { href: "/grand-prix", label: "Grand Prix" },
     { href: "/rankings", label: "Rankings" },
-    { href: "/clubs", label: "Clubs" },
     { href: "/league", label: "League" },
   ];
 

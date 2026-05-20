@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import FideSyncPanel from "./FideSyncPanel";
+import ChessResultsArchivePanel from "./ChessResultsArchivePanel";
 
 export const dynamic = "force-dynamic";
 
@@ -109,6 +110,9 @@ export default async function AdminDashboardPage() {
           <div className="space-y-8">
             {/* FIDE Data Sync Panel */}
             <FideSyncPanel />
+
+            {/* Chess-Results Archive Seeding Panel */}
+            <ChessResultsArchivePanel />
 
             <section className="p-8 bg-zinc-900 text-white rounded-[2.5rem]">
               <h3 className="text-sm font-black uppercase tracking-widest mb-6 text-blue-400">Quick Operations</h3>
